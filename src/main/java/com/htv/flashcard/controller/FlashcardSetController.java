@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,7 +60,20 @@ public class FlashcardSetController {
      * Cập nhật bộ flashcard
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateSet(@PathVariable Long id, @RequestBody FlashcardSetDTO dto) {
+    public ResponseEntity<?> updateSet(@PathVariable Long id, @RequestBody FlashcardSetDTO dto, @AuthenticationPrincipal UserDetails ud) {
+        // 1. Lấy user hiện tại
+        User currentUser = userService.findByEmail(ud.getUsername())
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+
+        // 2. Lấy bộ flashcard cần update
+        FlashcardSet existingSet = flashcardSetService.getSetById(id);
+
+        // 3. Kiểm tra quyền: chỉ creator mới được phép
+        if (!existingSet.getUser().getId().equals(currentUser.getId())) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("Bạn không có quyền cập nhật bộ flashcard này");
+        }
         return ResponseEntity.ok(flashcardSetService.updateSet(id, dto));
     }
 
@@ -67,7 +81,20 @@ public class FlashcardSetController {
      * Xóa bộ flashcard
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteSet(@PathVariable Long id) {
+    public ResponseEntity<?> deleteSet(@PathVariable Long id, @AuthenticationPrincipal UserDetails ud) {
+        // 1. Lấy user hiện tại
+        User currentUser = userService.findByEmail(ud.getUsername())
+                .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+
+        // 2. Lấy bộ flashcard cần xóa
+        FlashcardSet existingSet = flashcardSetService.getSetById(id);
+
+        // 3. Kiểm tra quyền: chỉ creator mới được phép
+        if (!existingSet.getUser().getId().equals(currentUser.getId())) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("Bạn không có quyền xóa bộ flashcard này");
+        }
         flashcardSetService.deleteSet(id);
         return ResponseEntity.ok("Xóa flashcard set thành công");
     }

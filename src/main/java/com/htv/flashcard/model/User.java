@@ -3,6 +3,9 @@ package com.htv.flashcard.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -19,7 +22,8 @@ public class User {
     private String password;
     private boolean enabled = true;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<FlashcardSet> flashcardSets = new ArrayList<>();
 
     @ManyToMany
@@ -28,5 +32,6 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "flashcard_set_id")
     )
+    @JsonIgnore 
     private List<FlashcardSet> savedFlashcardSets = new ArrayList<>();
 }

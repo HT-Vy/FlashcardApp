@@ -45,4 +45,11 @@ public class FlashcardService {
     public List<Flashcard> getFlashcardsByStatus(Long setId, Status status) {
         return flashcardRepository.findByFlashcardSetIdAndStatus(setId, status);
     }
+    /**
+     * Lấy Flashcard theo id; nếu không tồn tại thì ném RuntimeException
+     */
+    public Flashcard getFlashcardById(Long id) {
+        return flashcardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Flashcard với id " + id + " không tồn tại"));
+    }
 }

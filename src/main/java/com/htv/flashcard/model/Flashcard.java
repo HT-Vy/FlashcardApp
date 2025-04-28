@@ -1,12 +1,15 @@
 package com.htv.flashcard.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
@@ -24,5 +27,7 @@ public class Flashcard {
     private Status status = Status.UNLEARNED;
 
     @ManyToOne
+    @JoinColumn(name = "flashcard_set_id")
+    @JsonBackReference
     private FlashcardSet flashcardSet;
 }
