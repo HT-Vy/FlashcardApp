@@ -10,6 +10,8 @@ import com.htv.flashcard.model.User;
 import com.htv.flashcard.repository.FlashcardSetRepository;
 import com.htv.flashcard.repository.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class CollectionService {
     @Autowired 
@@ -31,4 +33,19 @@ public class CollectionService {
     public List<FlashcardSet> getUserCollections(Long userId) {
         return userRepository.findById(userId).orElseThrow().getSavedFlashcardSets();
     }
+    // /**
+    //  * Xóa một FlashcardSet khỏi collection của user.
+    //  * @param userId ID người dùng.
+    //  * @param setId ID bộ flashcard cần xóa.
+    //  */
+    // public void removeSetFromCollection(Long userId, Long setId) {
+    //     User user = userRepository.findById(userId)
+    //             .orElseThrow(() -> new EntityNotFoundException("User không tồn tại"));
+    //     FlashcardSet set = flashcardSetRepository.findById(setId)
+    //             .orElseThrow(() -> new EntityNotFoundException("FlashcardSet không tồn tại"));
+
+    //     // Loại bỏ set khỏi tập savedSets và lưu lại
+    //     user.getSavedFlashcardSets().remove(set);
+    //     userRepository.save(user);
+    // }
 }

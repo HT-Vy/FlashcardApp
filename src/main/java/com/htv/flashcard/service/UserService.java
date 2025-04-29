@@ -65,5 +65,9 @@ public class UserService implements UserDetailsService{
             .authorities(/* giả sử bạn chưa phân quyền, truyền rỗng */ Collections.emptyList())
             .build();
     }
+    // Trả về user dựa vào id
+    public User getUserById(Long userId){
+        return userRepository.findById(userId).orElseThrow();
+    }
 }
 

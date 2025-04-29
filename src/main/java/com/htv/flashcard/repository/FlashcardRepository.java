@@ -13,4 +13,6 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, Long> {
     List<Flashcard> findByFlashcardSetIdAndFrontContentContaining(Long setId, String keyword);
     List<Flashcard> findByFlashcardSetIdAndStatus(Long setId, Status status);
     //List<Flashcard> findByFlashcardSet_SetIdAndLearned(Long setId, boolean learned);
+    //Lấy tất cả ds của 1 bộ
+    List<Flashcard> findByFlashcardSetId(Long setId);
 }

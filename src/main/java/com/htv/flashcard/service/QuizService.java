@@ -55,4 +55,21 @@ public class QuizService {
         dto.setCorrect(isCorrect);
         return dto;
     }
+
+    /**
+     * Tính % tiến độ học: số thẻ LEARNED trên tổng số thẻ
+     */
+    public double calculateProgress(Long setId) {
+        // Lấy tất cả flashcard của bộ
+        List<Flashcard> all = flashcardRepo.findByFlashcardSetId(setId);
+        if (all.isEmpty()) {
+            return 0.0; // Tránh chia 0
+        }
+        // Đếm thẻ đã học
+        long learned = all.stream()
+                .filter(f -> f.getStatus() == Status.LEARNED)
+                .count();
+        // Tính % và trả về
+        return (100.0 * learned) / all.size();
+    }
 }
