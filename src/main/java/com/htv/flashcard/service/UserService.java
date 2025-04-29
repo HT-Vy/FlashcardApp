@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.htv.flashcard.DTO.UserDTO;
+import com.htv.flashcard.DTO.UserProfileDTO;
 import com.htv.flashcard.model.User;
 import com.htv.flashcard.repository.UserRepository;
 
@@ -30,11 +31,24 @@ public class UserService implements UserDetailsService{
         return userRepository.findByEmail(email);
     }
 
-    public User updateUser(Long id, UserDTO dto) {
-        User user = userRepository.findById(id).orElseThrow();
+    /**
+     * Cập nhật user và trả về UserProfileDTO
+     */
+    public UserProfileDTO updateUser(Long id, UserDTO dto) {
+        User user = userRepository.findById(id)
+                      .orElseThrow(() -> new RuntimeException("User không tồn tại"));
+        // Chỉ cho phép đổi fullName, không đổi email/password tại đây
         user.setFullName(dto.getFullName());
-        // không cập nhật email ở đây để giữ duy nhất
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
+
+        // Map User → UserProfileDTO
+        UserProfileDTO profile = new UserProfileDTO();
+        profile.setFullName(saved.getFullName());
+        profile.setEmail(saved.getEmail());
+        // Nếu muốn trả cả flashcardSets, bạn có thể map thêm:
+        // profile.setFlashcardSets(...);
+
+        return profile;
     }
 
     public void deleteUser(Long id) {

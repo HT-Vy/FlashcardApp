@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -68,22 +69,49 @@ public class AuthController {
     }
 
     /**
-     * Cập nhật thông tin user
+     * Cập nhật chính user đang login. Nếu id path khác với id của userDetails -> 403.
      */
     @PutMapping("/user/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDTO dto) {
-        return ResponseEntity.ok(userService.updateUser(id, dto));
+    public ResponseEntity<?> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserDTO dto,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        // Lấy user thực hiện request
+        User current = userService.findByEmail(userDetails.getUsername())
+                                  .orElseThrow();
+
+        // Chỉ cho phép update chính mình
+        if (!current.getId().equals(id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                 .body("Bạn không có quyền cập nhật user này");
+        }
+
+        // Thực hiện update
+        UserProfileDTO updated = userService.updateUser(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     /**
-     * Xóa user
+     * Xóa chính user đang login. Nếu id path khác -> 403.
      */
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        User current = userService.findByEmail(userDetails.getUsername())
+                                  .orElseThrow();
+
+        if (!current.getId().equals(id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                 .body("Bạn không có quyền xóa user này");
+        }
+
         userService.deleteUser(id);
         return ResponseEntity.ok("Xóa người dùng thành công");
     }
-
+    
     @GetMapping("/me")
     public ResponseEntity<UserProfileDTO> getCurrentUser(
             @AuthenticationPrincipal UserDetails userDetails) {
