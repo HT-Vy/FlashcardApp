@@ -21,6 +21,7 @@ public class User {
     private String email;
     private String password;
     private boolean enabled = true;
+    private String avatarUrl = "/assets/img/avatar.png";
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference

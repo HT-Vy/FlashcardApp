@@ -25,6 +25,11 @@
     table {
       line-height: 3.0;
     }
+    /* Khi hover lên avatar-container thì show */
+    .avatar-container:hover .logout-btn {
+      display: block !important;
+    }
+
   </style>
 </head>
 <script>
@@ -40,7 +45,7 @@
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
         aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand d-flex align-items-center m-0"
-        href="/dashboard.html" target="_blank">
+        href="../pages/dashboard.html" target="_blank">
         <span class="font-weight-bold text-lg">Flashcard</span>
       </a>
     </div>
@@ -209,8 +214,12 @@
 
             <li class="nav-item ps-2 d-flex align-items-center">
               <a href="./profile.html" class="nav-link text-body p-0">
-                <img src="../assets/img/user1.jpg" class="avatar avatar-sm" alt="avatar" />
+                <img id="navbarAvatar" src="../assets/img/avatar.png" class="avatar avatar-sm"  alt="avatar" />
               </a>
+              <!-- Nút logout ẩn sẵn -->
+              <button id="logoutBtn" class="btn btn-sm btn-light position-absolute" style="top: 110%; right: 0; display: none;">
+                Đăng xuất
+              </button>
             </li>
           </ul>
         </div>
@@ -222,138 +231,15 @@
         <div class="col-md-12">
           <div class="d-md-flex align-items-center mb-3 mx-2">
             <div class="mb-md-0 mb-3">
-              <h3 class="font-weight-bold mb-0" style="color: #774dd3;">Xin Chào, Vy Hồ</h3>
+              <h3 id="greeting" class="font-weight-bold mb-0" style="color: #774dd3;">Xin Chào, …</h3>
               <p class="mb-0">Bắt tay vào học thôi!</p>
             </div>
           </div>
         </div>
       </div>
       <hr class="my-0">
-      <div class="row">
-        <div class="col-xl-3 col-sm-6 mb-xl-0">
-          <div class="card border shadow-xs mb-4">
-            <a href="./learn.html" style="text-decoration: none;">
-              <div class="card-body text-start p-3 w-100">
-                <div
-                  class="icon icon-shape icon-sm bg-dark text-white text-center border-radius-sm d-flex align-items-center justify-content-center mb-3">
-                  <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                    fill="currentColor">
-                    <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
-                    <path fill-rule="evenodd"
-                      d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z"
-                      clip-rule="evenodd" />
-                  </svg>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                    <div class="w-100">
-                      <p class="text-sm text-secondary mb-1">123</p>
-                      <h4 class="mb-2 font-weight-bold text-truncate custom-title">Unit 3: Community Service</h4>
-                      <div class="d-flex align-items-center">
-                        <span class="text-sm text-success font-weight-bolder">
-                          <i class="fa fa-chevron-up text-xs me-1"></i>25%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0">
-          <div class="card border shadow-xs mb-4">
-            <a href="./learn.html" style="text-decoration: none;">
-              <div class="card-body text-start p-3 w-100">
-                <div
-                  class="icon icon-shape icon-sm bg-dark text-white text-center border-radius-sm d-flex align-items-center justify-content-center mb-3">
-                  <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                    fill="currentColor">
-                    <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
-                    <path fill-rule="evenodd"
-                      d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z"
-                      clip-rule="evenodd" />
-                  </svg>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                    <div class="w-100">
-                      <p class="text-sm text-secondary mb-1">234</p>
-                      <h4 class="mb-2 font-weight-bold text-truncate custom-title">Toeic nâng cao</h4>
-                      <div class="d-flex align-items-center">
-                        <span class="text-sm text-success font-weight-bolder">
-                          <i class="fa fa-chevron-up text-xs me-1"></i>14.5%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0">
-          <div class="card border shadow-xs mb-4">
-            <a href="./learn.html" style="text-decoration: none;">
-              <div class="card-body text-start p-3 w-100">
-                <div
-                  class="icon icon-shape icon-sm bg-dark text-white text-center border-radius-sm d-flex align-items-center justify-content-center mb-3">
-                  <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                    fill="currentColor">
-                    <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
-                    <path fill-rule="evenodd"
-                      d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z"
-                      clip-rule="evenodd" />
-                  </svg>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                    <div class="w-100">
-                      <p class="text-sm text-secondary mb-1">4523</p>
-                      <h4 class="mb-2 font-weight-bold text-truncate custom-title">Từ vựng mất gốc</h4>
-                      <div class="d-flex align-items-center">
-                        <span class="text-sm text-success font-weight-bolder">
-                          <i class="fa fa-chevron-up text-xs me-1"></i>94.6%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6">
-          <div class="card border shadow-xs mb-4">
-            <a href="./learn.html" style="text-decoration: none;">
-              <div class="card-body text-start p-3 w-100">
-                <div
-                  class="icon icon-shape icon-sm bg-dark text-white text-center border-radius-sm d-flex align-items-center justify-content-center mb-3">
-                  <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                    fill="currentColor">
-                    <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
-                    <path fill-rule="evenodd"
-                      d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z"
-                      clip-rule="evenodd" />
-                  </svg>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                    <div class="w-100">
-                      <p class="text-sm text-secondary mb-1">145 (Số thẻ)</p>
-                      <h4 class="mb-2 font-weight-bold text-truncate custom-title">Unit 9: My Home</h4>
-                      <div class="d-flex align-items-center">
-                        <span class="text-sm text-success font-weight-bolder">
-                          <i class="fa fa-chevron-up text-xs me-1"></i>48% (tiến trình)
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
+      <div class="row" id="recentSetsRow">
+         <!-- các card sẽ được inject vào đây -->
       </div>
       <div class="row my-4">
 
@@ -381,287 +267,8 @@
 
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <a href="./learn.html" style="text-decoration: none;">
-                          <div class="d-flex px-2">
-
-                            <div class="my-auto">
-                              <h6 class="mb-0 text-base">Toeic cơ bản</h6>
-                            </div>
-                          </div>
-                        </a>
-                      </td>
-                      <td>
-                        <p class="text-base font-weight-normal mb-0">1234</p>
-                      </td>
-                      <td>
-                        <span class="text-base font-weight-normal">Wed 3:00pm</span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="d-flex">
-
-                          <div class="d-flex align-items-center">
-                            <img src="../assets/img/user1.jpg" class="avatar avatar-sm rounded-circle me-2" alt="user1">
-                          </div>
-                          <div class="ms-2">
-                            <a href="./profile.html" class="text-dark text-base mb-0">Vy Hồ</a>
-
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <a href="./learn.html" style="text-decoration: none;">
-                          <div class="d-flex px-2">
-                            <div class="my-auto">
-                              <h6 class="mb-0 text-base">Ngữ pháp nâng cao</h6>
-                            </div>
-                          </div>
-                        </a>
-                      </td>
-                      <td>
-                        <p class="text-base font-weight-normal mb-0">4567</p>
-                      </td>
-                      <td>
-                        <span class="text-base font-weight-normal">Mon 10:30am</span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="d-flex">
-                          <div class="d-flex align-items-center">
-                            <img src="../assets/img/user2.jpg" class="avatar avatar-sm rounded-circle me-2" alt="user1">
-                          </div>
-                          <div class="ms-2">
-                            <a href="./profile.html" class="text-dark text-base mb-0">Nam Trần</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <a href="./learn.html" style="text-decoration: none;">
-                          <div class="d-flex px-2">
-                            <div class="my-auto">
-                              <h6 class="mb-0 text-base">Từ vựng IELTS</h6>
-                            </div>
-                          </div>
-                        </a>
-                      </td>
-                      <td>
-                        <p class="text-base font-weight-normal mb-0">7890</p>
-                      </td>
-                      <td>
-                        <span class="text-base font-weight-normal">Fri 8:00pm</span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="d-flex">
-                          <div class="d-flex align-items-center">
-                            <img src="../assets/img/user3.jpg" class="avatar avatar-sm rounded-circle me-2" alt="user1">
-                          </div>
-                          <div class="ms-2">
-                            <a href="./profile.html" class="text-dark text-base mb-0">Lan Phạm</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <a href="./learn.html" style="text-decoration: none;">
-                          <div class="d-flex px-2">
-                            <div class="my-auto">
-                              <h6 class="mb-0 text-base">Listening TOEFL</h6>
-                            </div>
-                          </div>
-                        </a>
-                      </td>
-                      <td>
-                        <p class="text-base font-weight-normal mb-0">3210</p>
-                      </td>
-                      <td>
-                        <span class="text-base font-weight-normal">Tue 1:15pm</span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="d-flex">
-                          <div class="d-flex align-items-center">
-                            <img src="../assets/img/user4.jpg" class="avatar avatar-sm rounded-circle me-2" alt="user1">
-                          </div>
-                          <div class="ms-2">
-                            <a href="./profile.html" class="text-dark text-base mb-0">Hưng Lê</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <a href="./learn.html" style="text-decoration: none;">
-                          <div class="d-flex px-2">
-                            <div class="my-auto">
-                              <h6 class="mb-0 text-base">Phrasal Verbs</h6>
-                            </div>
-                          </div>
-                        </a>
-                      </td>
-                      <td>
-                        <p class="text-base font-weight-normal mb-0">1593</p>
-                      </td>
-                      <td>
-                        <span class="text-base font-weight-normal">Sat 5:20pm</span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="d-flex">
-                          <div class="d-flex align-items-center">
-                            <img src="../assets/img/user5.jpg" class="avatar avatar-sm rounded-circle me-2" alt="user1">
-                          </div>
-                          <div class="ms-2">
-                            <a href="./profile.html" class="text-dark text-base mb-0">Thảo Vũ</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <a href="./learn.html" style="text-decoration: none;">
-                          <div class="d-flex px-2">
-                            <div class="my-auto">
-                              <h6 class="mb-0 text-base">Academic Writing</h6>
-                            </div>
-                          </div>
-                        </a>
-                      </td>
-                      <td>
-                        <p class="text-base font-weight-normal mb-0">2389</p>
-                      </td>
-                      <td>
-                        <span class="text-base font-weight-normal">Thu 9:45am</span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="d-flex">
-                          <div class="d-flex align-items-center">
-                            <img src="../assets/img/user3.jpg" class="avatar avatar-sm rounded-circle me-2" alt="user1">
-                          </div>
-                          <div class="ms-2">
-                            <a href="./profile.html" class="text-dark text-base mb-0">Minh Châu</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <a href="./learn.html" style="text-decoration: none;">
-                          <div class="d-flex px-2">
-                            <div class="my-auto">
-                              <h6 class="mb-0 text-base">Speaking Samples</h6>
-                            </div>
-                          </div>
-                        </a>
-                      </td>
-                      <td>
-                        <p class="text-base font-weight-normal mb-0">1023</p>
-                      </td>
-                      <td>
-                        <span class="text-base font-weight-normal">Sun 2:00pm</span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="d-flex">
-                          <div class="d-flex align-items-center">
-                            <img src="../assets/img/user1.jpg" class="avatar avatar-sm rounded-circle me-2" alt="user1">
-                          </div>
-                          <div class="ms-2">
-                            <a href="./profile.html" class="text-dark text-base mb-0">Tú Nguyễn</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <a href="./learn.html" style="text-decoration: none;">
-                          <div class="d-flex px-2">
-                            <div class="my-auto">
-                              <h6 class="mb-0 text-base">Từ vựng chuyên ngành Y</h6>
-                            </div>
-                          </div>
-                        </a>
-                      </td>
-                      <td>
-                        <p class="text-base font-weight-normal mb-0">4120</p>
-                      </td>
-                      <td>
-                        <span class="text-base font-weight-normal">Wed 6:10pm</span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="d-flex">
-                          <div class="d-flex align-items-center">
-                            <img src="../assets/img/user2.jpg" class="avatar avatar-sm rounded-circle me-2" alt="user1">
-                          </div>
-                          <div class="ms-2">
-                            <a href="./profile.html" class="text-dark text-base mb-0">Hà Đặng</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <a href="./learn.html" style="text-decoration: none;">
-                          <div class="d-flex px-2">
-                            <div class="my-auto">
-                              <h6 class="mb-0 text-base">Ngữ âm cơ bản</h6>
-                            </div>
-                          </div>
-                        </a>
-                      </td>
-                      <td>
-                        <p class="text-base font-weight-normal mb-0">3054</p>
-                      </td>
-                      <td>
-                        <span class="text-base font-weight-normal">Tue 11:00am</span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="d-flex">
-                          <div class="d-flex align-items-center">
-                            <img src="../assets/img/user1.jpg" class="avatar avatar-sm rounded-circle me-2" alt="user1">
-                          </div>
-                          <div class="ms-2">
-                            <a href="./profile.html" class="text-dark text-base mb-0">Phúc Bùi</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <a href="./learn.html" style="text-decoration: none;">
-                          <div class="d-flex px-2">
-                            <div class="my-auto">
-                              <h6 class="mb-0 text-base">Từ vựng chuyên ngành Y</h6>
-                            </div>
-                          </div>
-                        </a>
-                      </td>
-                      <td>
-                        <p class="text-base font-weight-normal mb-0">4120</p>
-                      </td>
-                      <td>
-                        <span class="text-base font-weight-normal">Wed 6:10pm</span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="d-flex">
-                          <div class="d-flex align-items-center">
-                            <img src="../assets/img/user2.jpg" class="avatar avatar-sm rounded-circle me-2" alt="user1">
-                          </div>
-                          <div class="ms-2">
-                            <a href="./profile.html" class="text-dark text-base mb-0">Hà Đặng</a>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
+                  <tbody id="popularTbody">
+                    <!-- sẽ inject 10 dòng ở đây -->
                   </tbody>
                 </table>
               </div>
@@ -694,10 +301,16 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
+
+
+
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/corporate-ui-dashboard.min.js?v=1.0.0"></script>
+  <script src="../assets/js/navbar.js"></script>
+
+  <script src="../assets/js/dashboard.js"></script>
 </body>
 
 </html>

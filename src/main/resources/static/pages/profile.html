@@ -8,7 +8,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
-    Flashcard - Trang Chủ
+    Flashcard - Trang cá nhân
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Noto+Sans:300,400,500,600,700,800|PT+Mono:300,400,500,600,700" rel="stylesheet" />
@@ -32,7 +32,7 @@
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 bg-slate-900 fixed-start " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand d-flex align-items-center m-0" href="/dashboard.html" target="_blank">
+      <a class="navbar-brand d-flex align-items-center m-0" href="../pages/dashboard.html" target="_blank">
         <span class="font-weight-bold text-lg">Flashcard</span>
       </a>
     </div>
@@ -119,16 +119,6 @@
             <span class="nav-link-text ms-1">Hồ Sơ</span>
           </a>
         </li>
-        <li class="nav-item border-start my-0 pt-2">
-          <a class="nav-link position-relative ms-0 ps-2 py-2 " href="../pages/sign-in.html">
-            <span class="nav-link-text ms-1">Đăng nhập</span>
-          </a>
-        </li>
-        <li class="nav-item border-start my-0 pt-2">
-          <a class="nav-link position-relative ms-0 ps-2 py-2 " href="../pages/sign-up.html">
-            <span class="nav-link-text ms-1">Đăng ký</span>
-          </a>
-        </li>
       </ul>
     </div>
   </aside>
@@ -180,24 +170,29 @@
         <div class="row">
           <div class="col-auto">
             <div class="avatar avatar-2xl rounded-circle position-relative mt-n7 border border-gray-100 border-4">
-              <img src="../assets/img/user1.jpg" alt="profile_image" class="w-100">
+              <img id="profileAvatar" src="../assets/img/user1.jpg" alt="profile_image" class="w-100">
+              <!-- Avatar Upload -->
+              <!-- <input type="file" id="avatarInput" accept="image/*" class="form-control-sm mt-2" />
+              <button id="uploadAvatarBtn" class="btn btn-sm btn-primary mt-2">Cập nhật ảnh</button> alt="profile_image" class="w-100"> -->
+              
             </div>
+            
           </div>
           <div class="col-auto my-auto">
             <div class="h-100">
-              <h3 class="mb-0 font-weight-bold">
-                Vy Hồ
-              </h3>
-              <p class="mb-0">
-                htz@mail.com
-              </p>
+              <h3 id="profileName" class="mb-0 font-weight-bold">…</h3>
+              <p id="profileEmail" class="mb-0">…</p> 
             </div>
           </div>
           <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3 text-sm-end">
-            <a href="javascript:;" class="btn btn-sm btn-white">Cancel</a>
-            <a href="javascript:;" class="btn btn-sm btn-dark">Save</a>
+              <button id="editProfileBtn" type="button" class="btn btn-white btn-icon px-2 py-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
+                  </svg>
+              </button>
           </div>
         </div>
+        
       </div>
     </div>
     <div class="container my-3 py-3">
@@ -208,32 +203,34 @@
               <div class="row">
                 <div class="col-md-8 col-9">
                   <h6 class="mb-0 font-weight-semibold text-lg">Thông tin hồ sơ cá nhân</h6>
-                  <p class="text-sm mb-1">Giới thiệu ngắn gọn:</p>
                 </div>
-                <div class="col-md-4 col-3 text-end">
-                  <button type="button" class="btn btn-white btn-icon px-2 py-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
-                    </svg>
-                  </button>
-                </div>
+                
               </div>
             </div>
             <div class="card-body p-3">
-              <p class="text-sm mb-4">
-                Hi, I’m Alec Thompson, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality).
-              </p>
+            
               <ul class="list-group">
-                <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pt-0 pb-1 text-sm"><span class="text-secondary">Họ và tên:</span> &nbsp; Vy Hồ</li>
-                <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pb-1 text-sm"><span class="text-secondary">Email:</span> &nbsp; htz@gmail.com</li>
-                <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pb-1 text-sm"><span class="text-secondary">Facebook</span> &nbsp; htvy.203</li>
-                
+                <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pt-0 pb-1 text-sm">
+                  <span class="text-secondary">Họ và tên:</span>
+                  &nbsp;<span id="profileFullName">…</span>
+                </li>
+                <li class="list-group-item border-0 ps-0 text-dark font-weight-semibold pb-1 text-sm">
+                  <span class="text-secondary">Email:</span>
+                  &nbsp;<span id="profileEmailDetail">…</span>
+                </li>
               </ul>
             </div>
           </div>
         </div>
       </div>
     </div>
+     <!-- User's Sets (Recent) -->
+  <div class="container my-3 py-3">
+    <h5>Bộ Flashcard của bạn</h5>
+    <div class="row" id="userSetsRow">
+      <!-- sẽ inject card tương tự dashboard -->
+    </div>
+  </div>
   </main>
  
   <!--   Core JS Files   -->
@@ -258,6 +255,10 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/corporate-ui-dashboard.min.js?v=1.0.0"></script>
+  <script src="../assets/js/navbar.js"></script>
+
+  <script src="/assets/js/profile.js"></script>
+
 </body>
 
 </html>

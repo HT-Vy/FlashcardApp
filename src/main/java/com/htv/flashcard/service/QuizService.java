@@ -1,5 +1,6 @@
 package com.htv.flashcard.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +8,15 @@ import org.springframework.stereotype.Service;
 
 import com.htv.flashcard.DTO.QuizEvaluateDTO;
 import com.htv.flashcard.model.Flashcard;
+import com.htv.flashcard.model.FlashcardSet;
 import com.htv.flashcard.model.Status;
 import com.htv.flashcard.repository.FlashcardRepository;
+import com.htv.flashcard.repository.FlashcardSetRepository;
 
 @Service
 public class QuizService {
     @Autowired private FlashcardRepository flashcardRepo;
+    @Autowired private FlashcardSetRepository flashcardSetRepo;
     
 
     /**
@@ -48,6 +52,11 @@ public class QuizService {
             }
         }
         flashcardRepo.save(fc);
+
+        //Cập nhật lại thời gian học gần nhất:
+        FlashcardSet set = fc.getFlashcardSet();
+        set.setLastStudiedAt(LocalDateTime.now());
+        flashcardSetRepo.save(set);
 
         // Tạo và trả về DTO kết quả
         QuizEvaluateDTO dto = new QuizEvaluateDTO();

@@ -25,6 +25,7 @@ import com.htv.flashcard.DTO.FlashcardSetDTO;
 import com.htv.flashcard.DTO.LoginRequest;
 import com.htv.flashcard.DTO.UserDTO;
 import com.htv.flashcard.DTO.UserProfileDTO;
+import com.htv.flashcard.model.Status;
 import com.htv.flashcard.model.User;
 import com.htv.flashcard.security.JwtUtil;
 import com.htv.flashcard.service.UserService;
@@ -128,12 +129,28 @@ public class AuthController {
     public ResponseEntity<UserProfileDTO> getCurrentUser(
             @AuthenticationPrincipal UserDetails userDetails) {
         User u = userService.findByEmail(userDetails.getUsername()).orElseThrow();
-        List<FlashcardSetDTO> sets = u.getFlashcardSets().stream().map(fs -> {
-            FlashcardSetDTO dto = new FlashcardSetDTO();
-            dto.setTitle(fs.getTitle());
-            dto.setDescription(fs.getDescription());
-            return dto;
-        }).collect(Collectors.toList());
+        // Mới: map id, title, description và flashcardCount
+        List<FlashcardSetDTO> sets = u.getFlashcardSets().stream()
+        .map(fs -> {
+                int total = fs.getFlashcards().size();
+                long learned = fs.getFlashcards().stream()
+                                .filter(f -> f.getStatus() == Status.LEARNED)
+                                .count();
+                double percent = total > 0 ? (learned * 100.0 / total) : 0.0;
+                return new FlashcardSetDTO(
+                fs.getId(),
+                fs.getTitle(),
+                fs.getDescription(),
+                fs.getLastStudiedAt() != null ? fs.getLastStudiedAt() : fs.getCreatedAt(),
+                fs.getSavedByUsers().size(),
+                fs.getUser().getId(),
+                fs.getUser().getFullName(),
+                fs.getUser().getAvatarUrl(),
+                total,
+                percent
+            );
+        })
+        .collect(Collectors.toList());
         UserProfileDTO profile = new UserProfileDTO();
         profile.setFullName(u.getFullName());
         profile.setEmail(u.getEmail());
