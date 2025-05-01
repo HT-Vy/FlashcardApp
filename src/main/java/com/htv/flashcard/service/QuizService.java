@@ -33,7 +33,7 @@ public class QuizService {
      * @return QuizEvaluateDTO chứa flashcardId và kết quả đúng/sai
      */
     public QuizEvaluateDTO evaluateFlashcard(Flashcard fc, String userAnswer, boolean isReview) {
-        String correctAnswer = fc.getBackContent().trim().toLowerCase();
+        String correctAnswer = fc.getFrontContent().trim().toLowerCase();
         String input        = userAnswer.trim().toLowerCase();
         boolean isCorrect   = correctAnswer.equals(input);
 

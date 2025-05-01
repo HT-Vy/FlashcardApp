@@ -22,6 +22,12 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"/>
   <link rel="stylesheet" href="../assets/css/flashcardset-style.css">
 </head>
+<script>
+  // Nếu không có token, quay về trang login
+  if (!sessionStorage.getItem('token')) {
+    window.location.href = 'sign-in.html';
+  }
+</script>
 
 <body class="g-sidenav-show  bg-gray-100">
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 bg-slate-900 fixed-start " id="sidenav-main">

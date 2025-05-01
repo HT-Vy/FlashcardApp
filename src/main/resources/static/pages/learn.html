@@ -25,6 +25,12 @@
   <link rel="stylesheet" href="../assets/css/flashcard-style.css">
     
 </head>
+<script>
+  // Nếu không có token, quay về trang login
+  if (!sessionStorage.getItem('token')) {
+    window.location.href = 'sign-in.html';
+  }
+</script>
 
 <body class="g-sidenav-show  bg-gray-100">
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 bg-slate-900 fixed-start " id="sidenav-main">

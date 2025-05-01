@@ -88,93 +88,93 @@
 //     });
 //   });
   // Đợi khi toàn bộ DOM được load
-document.addEventListener("DOMContentLoaded", function () {
-    // ===============================
-    // Xử lý đăng nhập
-    // ===============================
+// document.addEventListener("DOMContentLoaded", function () {
+//     // ===============================
+//     // Xử lý đăng nhập
+//     // ===============================
 
-    const loginForm = document.getElementById("loginForm");
-    if (loginForm) {
-        loginForm.addEventListener("submit", async function (event) {
-            event.preventDefault(); // Ngăn reload trang
+//     const loginForm = document.getElementById("loginForm");
+//     if (loginForm) {
+//         loginForm.addEventListener("submit", async function (event) {
+//             event.preventDefault(); // Ngăn reload trang
 
-            // Lấy dữ liệu từ input
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value.trim();
+//             // Lấy dữ liệu từ input
+//             const email = document.getElementById("email").value.trim();
+//             const password = document.getElementById("password").value.trim();
 
-            // Kiểm tra dữ liệu
-            if (!email || !password) {
-                alert("Vui lòng nhập đầy đủ Email và Mật khẩu!");
-                return;
-            }
+//             // Kiểm tra dữ liệu
+//             if (!email || !password) {
+//                 alert("Vui lòng nhập đầy đủ Email và Mật khẩu!");
+//                 return;
+//             }
 
-            try {
-                const response = await fetch("/api/auth/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ email, password })
-                });
+//             try {
+//                 const response = await fetch("/api/auth/login", {
+//                     method: "POST",
+//                     headers: {
+//                         "Content-Type": "application/json"
+//                     },
+//                     body: JSON.stringify({ email, password })
+//                 });
 
-                const data = await response.text(); // Lấy dữ liệu trả về dưới dạng text
+//                 const data = await response.text(); // Lấy dữ liệu trả về dưới dạng text
 
-                if (response.ok) {
-                    const { token } = JSON.parse(data); // Parse JSON nếu login thành công
-                    localStorage.setItem("token", token); // Lưu token
-                    window.location.href = "/pages/dashboard.html"; // Chuyển trang
-                } else {
-                    alert("Đăng nhập thất bại: " + data);
-                }
-            } catch (error) {
-                console.error("Lỗi khi đăng nhập:", error);
-                alert("Không thể kết nối tới server!");
-            }
-        });
-    }
+//                 if (response.ok) {
+//                     const { token } = JSON.parse(data); // Parse JSON nếu login thành công
+//                     localStorage.setItem("token", token); // Lưu token
+//                     window.location.href = "/pages/dashboard.html"; // Chuyển trang
+//                 } else {
+//                     alert("Đăng nhập thất bại: " + data);
+//                 }
+//             } catch (error) {
+//                 console.error("Lỗi khi đăng nhập:", error);
+//                 alert("Không thể kết nối tới server!");
+//             }
+//         });
+//     }
 
-    // ===============================
-    // Xử lý đăng ký
-    // ===============================
+//     // ===============================
+//     // Xử lý đăng ký
+//     // ===============================
 
-    const registerForm = document.getElementById("registerForm");
-    if (registerForm) {
-        registerForm.addEventListener("submit", async function (e) {
-            e.preventDefault(); // Ngăn reload trang
+//     const registerForm = document.getElementById("registerForm");
+//     if (registerForm) {
+//         registerForm.addEventListener("submit", async function (e) {
+//             e.preventDefault(); // Ngăn reload trang
 
-            // Lấy dữ liệu từ form
-            const email = document.getElementById("email").value.trim();
-            const fullName = document.getElementById("fullName").value.trim();
-            const password = document.getElementById("password").value.trim();
+//             // Lấy dữ liệu từ form
+//             const email = document.getElementById("email").value.trim();
+//             const fullName = document.getElementById("fullName").value.trim();
+//             const password = document.getElementById("password").value.trim();
 
-            // Validate dữ liệu
-            if (!email || !fullName || !password) {
-                alert("Vui lòng nhập đầy đủ Email, Họ tên và Mật khẩu!");
-                return;
-            }
+//             // Validate dữ liệu
+//             if (!email || !fullName || !password) {
+//                 alert("Vui lòng nhập đầy đủ Email, Họ tên và Mật khẩu!");
+//                 return;
+//             }
 
-            try {
-                const response = await fetch("/api/auth/register", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ email, fullName, password })
-                });
+//             try {
+//                 const response = await fetch("/api/auth/register", {
+//                     method: "POST",
+//                     headers: {
+//                         "Content-Type": "application/json"
+//                     },
+//                     body: JSON.stringify({ email, fullName, password })
+//                 });
 
-                const data = await response.text(); // Lấy dữ liệu trả về dưới dạng text
+//                 const data = await response.text(); // Lấy dữ liệu trả về dưới dạng text
 
-                if (response.ok) {
-                    const user = JSON.parse(data); // Parse JSON nếu đăng ký thành công
-                    alert("Đăng ký thành công! Bạn có thể đăng nhập ngay.");
-                    window.location.href = "/pages/sign-in.html"; // Chuyển hướng trang
-                } else {
-                    alert("Đăng ký thất bại: " + data); // Hiển thị lỗi từ server
-                }
-            } catch (error) {
-                console.error("Lỗi khi đăng ký:", error);
-                alert("Không thể kết nối tới server!");
-            }
-        });
-    }
-});
+//                 if (response.ok) {
+//                     const user = JSON.parse(data); // Parse JSON nếu đăng ký thành công
+//                     alert("Đăng ký thành công! Bạn có thể đăng nhập ngay.");
+//                     window.location.href = "/pages/sign-in.html"; // Chuyển hướng trang
+//                 } else {
+//                     alert("Đăng ký thất bại: " + data); // Hiển thị lỗi từ server
+//                 }
+//             } catch (error) {
+//                 console.error("Lỗi khi đăng ký:", error);
+//                 alert("Không thể kết nối tới server!");
+//             }
+//         });
+//     }
+// });

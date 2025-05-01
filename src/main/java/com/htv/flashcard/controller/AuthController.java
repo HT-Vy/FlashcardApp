@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,8 @@ import com.htv.flashcard.model.User;
 import com.htv.flashcard.security.JwtUtil;
 import com.htv.flashcard.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -44,10 +47,19 @@ public class AuthController {
      * Đăng ký tài khoản: kiểm tra email, mã hóa mật khẩu, lưu user
      */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> register(@Valid @RequestBody UserDTO userDTO) {
+        // 1) Nếu có lỗi validation, trả lỗi đầu tiên
+        // if (bindingResult.hasErrors()) {
+        //     String errMsg = bindingResult.getFieldError().getDefaultMessage();
+        //     return ResponseEntity.badRequest().body(errMsg);
+        // }
+
+        // 2) Kiểm tra email đã tồn tại
         if (userService.findByEmail(userDTO.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email đã tồn tại!");
+            return ResponseEntity.badRequest()
+                                .body("Email đã tồn tại!");
         }
+
         User user = new User();
         user.setFullName(userDTO.getFullName());
         user.setEmail(userDTO.getEmail());
@@ -111,7 +123,7 @@ public class AuthController {
         userService.deleteUser(id);
         return ResponseEntity.ok("Xóa người dùng thành công");
     }
-    
+
     @GetMapping("/me")
     public ResponseEntity<UserProfileDTO> getCurrentUser(
             @AuthenticationPrincipal UserDetails userDetails) {
