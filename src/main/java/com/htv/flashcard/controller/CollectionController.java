@@ -1,5 +1,8 @@
 package com.htv.flashcard.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.htv.flashcard.DTO.FlashcardSetDTO;
 import com.htv.flashcard.model.User;
 import com.htv.flashcard.service.CollectionService;
 import com.htv.flashcard.service.UserService;
@@ -38,8 +42,22 @@ public class CollectionController {
      * Lấy danh sách collection của user
      */
     @GetMapping
-    public ResponseEntity<?> getCollections(@AuthenticationPrincipal UserDetails ud) {
-        User user = userService.findByEmail(ud.getUsername()).orElseThrow();
-        return ResponseEntity.ok(collectionService.getUserCollections(user.getId()));
+    public ResponseEntity<List<FlashcardSetDTO>> getCollections(@AuthenticationPrincipal UserDetails ud) {
+        User u = userService.findByEmail(ud.getUsername()).orElseThrow();
+        List<FlashcardSetDTO> dtos = u.getSavedFlashcardSets().stream()
+            .map(fs -> new FlashcardSetDTO(
+                fs.getId(),
+                fs.getTitle(),
+                fs.getDescription(),
+                fs.getLastStudiedAt()!=null?fs.getLastStudiedAt():fs.getCreatedAt(),
+                fs.getSavedByUsers().size(),         // số người đã lưu
+                fs.getUser().getId(),
+                fs.getUser().getFullName(),         // tên tác giả
+                fs.getUser().getAvatarUrl(),
+                fs.getFlashcards().size(),
+                0.0
+            ))
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 }

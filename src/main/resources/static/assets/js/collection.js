@@ -32,7 +32,7 @@ function renderTable(sets) {
     const tbody = document.getElementById('collectionTableBody');
     tbody.innerHTML = sets.map(s => `
       <tr>
-        <td>
+        <td style="padding: 18px">
           <a href="./learn.html?setId=${s.id}" class="text-decoration-none">
             <h6 class="mb-0 text-base">${s.title}</h6>
           </a>

@@ -32,12 +32,14 @@
 
   </style>
 </head>
+
 <script>
-  // Nếu không có token, quay về trang login
-  if (!sessionStorage.getItem('token')) {
+  // Nếu không có token, quay về login
+  if (!localStorage.getItem('token')) {
     window.location.href = 'sign-in.html';
   }
 </script>
+
 
 <body class="g-sidenav-show  bg-gray-100">
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 bg-slate-900 fixed-start " id="sidenav-main">
@@ -214,7 +216,7 @@
 
             <li class="nav-item ps-2 d-flex align-items-center">
               <a href="./profile.html" class="nav-link text-body p-0">
-                <img id="navbarAvatar" src="../assets/img/avatar.png" class="avatar avatar-sm"  alt="avatar" />
+                <img id="navbarAvatar" src="./uploads/default-avatar.png" class="avatar avatar-sm"  alt="avatar" />
               </a>
               <!-- Nút logout ẩn sẵn -->
               <button id="logoutBtn" class="btn btn-sm btn-light position-absolute" style="top: 110%; right: 0; display: none;">

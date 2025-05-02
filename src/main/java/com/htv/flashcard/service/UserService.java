@@ -2,6 +2,12 @@ package com.htv.flashcard.service;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.IOException;
+import java.util.UUID;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.htv.flashcard.DTO.UserDTO;
 import com.htv.flashcard.DTO.UserProfileDTO;
@@ -32,23 +39,42 @@ public class UserService implements UserDetailsService{
     }
 
     /**
-     * Cập nhật user và trả về UserProfileDTO
+     * Cập nhật fullName và avatarUrl (nếu có)
      */
-    public UserProfileDTO updateUser(Long id, UserDTO dto) {
+    public UserProfileDTO updateUserProfile(Long id, String fullName, MultipartFile avatar) {
         User user = userRepository.findById(id)
                       .orElseThrow(() -> new RuntimeException("User không tồn tại"));
-        // Chỉ cho phép đổi fullName, không đổi email/password tại đây
-        user.setFullName(dto.getFullName());
+
+        // 1) Cập nhật fullName
+        user.setFullName(fullName);
+
+        // 2) Nếu có file avatar, lưu file và cập nhật avatarUrl
+        if (avatar != null && !avatar.isEmpty()) {
+            // Ví dụ lưu trong thư mục /uploads/ với tên file duy nhất
+            String filename = UUID.randomUUID() + "-" + avatar.getOriginalFilename();
+            Path target = Paths.get("src/main/resources/static/uploads").resolve(filename);
+            try {
+                Files.createDirectories(target.getParent());
+                avatar.transferTo(target);
+                user.setAvatarUrl("/uploads/" + filename);
+            } catch (IOException e) {
+                throw new RuntimeException("Lỗi lưu avatar", e);
+            }
+        }
+
+        // 3) Lưu lại và map sang DTO
         User saved = userRepository.save(user);
-
-        // Map User → UserProfileDTO
-        UserProfileDTO profile = new UserProfileDTO();
-        profile.setFullName(saved.getFullName());
-        profile.setEmail(saved.getEmail());
-        // Nếu muốn trả cả flashcardSets, bạn có thể map thêm:
-        // profile.setFlashcardSets(...);
-
-        return profile;
+        UserProfileDTO dto = new UserProfileDTO();
+        dto.setFullName(saved.getFullName());
+        dto.setEmail(saved.getEmail());
+        dto.setAvatarUrl(saved.getAvatarUrl());
+        // nếu muốn trả sets:
+        // dto.setFlashcardSets(
+        //     saved.getFlashcardSets().stream()
+        //          .map(fs -> /* map sang FlashcardSetDTO */ )
+        //          .collect(Collectors.toList())
+        // );
+        return dto;
     }
 
     public void deleteUser(Long id) {

@@ -22,17 +22,18 @@
   <link id="pagestyle" href="../assets/css/corporate-ui-dashboard.css?v=1.0.0" rel="stylesheet" />
 </head>
 <script>
-  // Nếu không có token, quay về trang login
-  if (!sessionStorage.getItem('token')) {
+  // Nếu không có token, quay về login
+  if (!localStorage.getItem('token')) {
     window.location.href = 'sign-in.html';
   }
 </script>
+
 
 <body class="g-sidenav-show  bg-gray-100">
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 bg-slate-900 fixed-start " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand d-flex align-items-center m-0" href="../pages/dashboard.html" target="_blank">
+      <a class="navbar-brand d-flex align-items-center m-0" href="#" target="_blank">
         <span class="font-weight-bold text-lg">Flashcard</span>
       </a>
     </div>
@@ -153,9 +154,13 @@
             </li>
            
             <li class="nav-item ps-2 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body p-0">
-                <img src="../assets/img/user1.jpg" class="avatar avatar-sm" alt="avatar" />
+              <a href="./profile.html" class="nav-link text-body p-0">
+                <img id="navbarAvatar" src="./uploads/default-avatar.png" class="avatar avatar-sm"  alt="avatar" />
               </a>
+              <!-- Nút logout ẩn sẵn -->
+              <button id="logoutBtn" class="btn btn-sm btn-light position-absolute" style="top: 110%; right: 0; display: none;">
+                Đăng xuất
+              </button>
             </li>
           </ul>
         </div>
@@ -170,11 +175,7 @@
         <div class="row">
           <div class="col-auto">
             <div class="avatar avatar-2xl rounded-circle position-relative mt-n7 border border-gray-100 border-4">
-              <img id="profileAvatar" src="../assets/img/user1.jpg" alt="profile_image" class="w-100">
-              <!-- Avatar Upload -->
-              <!-- <input type="file" id="avatarInput" accept="image/*" class="form-control-sm mt-2" />
-              <button id="uploadAvatarBtn" class="btn btn-sm btn-primary mt-2">Cập nhật ảnh</button> alt="profile_image" class="w-100"> -->
-              
+              <img id="profileAvatar" src="../uploads/default-avatar.png" alt="profile_image" class="w-100">
             </div>
             
           </div>
@@ -184,13 +185,13 @@
               <p id="profileEmail" class="mb-0">…</p> 
             </div>
           </div>
-          <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3 text-sm-end">
-              <button id="editProfileBtn" type="button" class="btn btn-white btn-icon px-2 py-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
-                  </svg>
-              </button>
-          </div>
+          <!-- Nút chỉnh sửa -->
+        <div class="col-auto ms-auto text-end">
+          <button id="editProfileBtn" class="btn btn-white btn-icon px-2 py-2"
+                  data-bs-toggle="modal" data-bs-target="#editProfileModal">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+        </div>
         </div>
         
       </div>
@@ -224,6 +225,38 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal Chỉnh sửa hồ sơ -->
+  <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileLabel">Chỉnh sửa hồ sơ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <form id="formEditProfile" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="avatarInput" class="form-label">Tải ảnh đại diện</label>
+              <input class="form-control" type="file" id="avatarInput" name="avatar" accept="image/*">
+            </div>
+            <div class="mb-3">
+              <label for="fullnameInput" class="form-label">Họ và tên</label>
+              <input type="text" class="form-control" id="fullnameInput" name="fullName" placeholder="Nhập họ và tên">
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelProfile">Hủy</button>
+          <button type="button" class="btn btn-primary" id="saveProfile">Lưu</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
      <!-- User's Sets (Recent) -->
   <div class="container my-3 py-3">
     <h5>Bộ Flashcard của bạn</h5>

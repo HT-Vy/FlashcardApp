@@ -67,7 +67,7 @@
       const tbody = document.getElementById('popularTbody');
       tbody.innerHTML = popular.map(s => `
         <tr>
-          <td>
+          <td style="padding: 18px">
             <a href="./learn.html?setId=${s.id}" style="text-decoration:none;">
               <div class="d-flex px-2">
                 <div class="my-auto">

@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 import com.htv.flashcard.DTO.AuthResponse;
 import com.htv.flashcard.DTO.FlashcardSetDTO;
 import com.htv.flashcard.DTO.LoginRequest;
@@ -82,26 +84,27 @@ public class AuthController {
     }
 
     /**
-     * Cập nhật chính user đang login. Nếu id path khác với id của userDetails -> 403.
+     * Cập nhật user hiện tại, có thể bao gồm upload avatar
      */
-    @PutMapping("/user/{id}")
+    @PutMapping(
+      value = "/user/{id}", 
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<?> updateUser(
-            @PathVariable Long id,
-            @RequestBody UserDTO dto,
-            @AuthenticationPrincipal UserDetails userDetails) {
-
-        // Lấy user thực hiện request
-        User current = userService.findByEmail(userDetails.getUsername())
-                                  .orElseThrow();
-
-        // Chỉ cho phép update chính mình
+        @PathVariable Long id,
+        @RequestPart("fullName") String fullName,
+        @RequestPart(value = "avatar", required = false) MultipartFile avatar,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        // 1. Kiểm tra quyền
+        User current = userService.findByEmail(userDetails.getUsername()).orElseThrow();
         if (!current.getId().equals(id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                                  .body("Bạn không có quyền cập nhật user này");
         }
 
-        // Thực hiện update
-        UserProfileDTO updated = userService.updateUser(id, dto);
+        // 2. Thực hiện cập nhật
+        UserProfileDTO updated = userService.updateUserProfile(id, fullName, avatar);
         return ResponseEntity.ok(updated);
     }
 
@@ -152,9 +155,11 @@ public class AuthController {
         })
         .collect(Collectors.toList());
         UserProfileDTO profile = new UserProfileDTO();
+        profile.setId(u.getId());  
         profile.setFullName(u.getFullName());
         profile.setEmail(u.getEmail());
         profile.setFlashcardSets(sets);
+        profile.setAvatarUrl(u.getAvatarUrl());
         return ResponseEntity.ok(profile);
     }
 }
