@@ -10,4 +10,6 @@ public class FlashcardSetDetailDTO {
     private String title;
     private String description;
     private List<FlashcardDTO> flashcards;
+    private boolean collected;
+    private boolean ownedByCurrentUser;
 }

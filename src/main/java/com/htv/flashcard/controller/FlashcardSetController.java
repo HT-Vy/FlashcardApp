@@ -27,6 +27,7 @@ import com.htv.flashcard.DTO.FlashcardSetDetailDTO;
 import com.htv.flashcard.model.FlashcardSet;
 import com.htv.flashcard.model.User;
 import com.htv.flashcard.repository.FlashcardSetRepository;
+import com.htv.flashcard.service.CollectionService;
 import com.htv.flashcard.service.FlashcardSetService;
 import com.htv.flashcard.service.UserService;
 
@@ -42,6 +43,9 @@ public class FlashcardSetController {
 
     @Autowired
     private FlashcardSetRepository flashcardSetRepository;
+
+    @Autowired
+    private CollectionService collectionService;
 
     /**
      * Tạo bộ flashcard mới
@@ -122,18 +126,45 @@ public class FlashcardSetController {
 
     /**
      * GET /api/sets/{id}
-     * Lấy chi tiết một bộ FlashcardSet (nếu cần)
+     * Trả về chi tiết set + danh sách flashcards + trạng thái bookmark
      */
     @GetMapping("/{id}")
-    public ResponseEntity<FlashcardSetDetailDTO> getSetById(@PathVariable Long id) {
+    public ResponseEntity<FlashcardSetDetailDTO> getSetById(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails ud    // ← inject user hiện tại
+    ) {
+        // 1. Load User entity
+        User user = userService.findByEmail(ud.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User không tồn tại"));
+        Long currentUserId = user.getId();
+        // 2. Lấy FlashcardSet
         FlashcardSet s = flashcardSetService.getSetById(id);
+
+        // 3. Map entity → DTO
         FlashcardSetDetailDTO dto = new FlashcardSetDetailDTO();
-        dto.setId(s.getId()); dto.setTitle(s.getTitle()); dto.setDescription(s.getDescription());
-        dto.setFlashcards(s.getFlashcards().stream().map(f -> {
-            FlashcardDTO fd = new FlashcardDTO(); fd.setFrontContent(f.getFrontContent()); fd.setBackContent(f.getBackContent()); return fd;
-        }).collect(Collectors.toList()));
+        dto.setId(s.getId());
+        dto.setTitle(s.getTitle());
+        dto.setDescription(s.getDescription());
+        dto.setFlashcards(
+          s.getFlashcards().stream().map(f -> {
+            FlashcardDTO fd = new FlashcardDTO();
+            fd.setFrontContent(f.getFrontContent());
+            fd.setBackContent(f.getBackContent());
+            return fd;
+          }).collect(Collectors.toList())
+        );
+
+        // 4. Kiểm tra bookmark và set vào DTO
+        boolean isCollected = collectionService.isCollected(user.getId(), id);
+        dto.setCollected(isCollected);   
+        // 5. Owner? nếu creator.id == currentUserId
+        boolean isOwner = s.getUser().getId().equals(currentUserId);
+        dto.setOwnedByCurrentUser(isOwner);
+
+        // 5. Trả về DTO
         return ResponseEntity.ok(dto);
     }
+
 
      @PostMapping("/{setId}/flashcards/batch")
     public ResponseEntity<?> addFlashcardsBatch(

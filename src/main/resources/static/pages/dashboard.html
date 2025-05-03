@@ -34,8 +34,8 @@
 </head>
 
 <script>
-  // Nếu không có token, quay về login
-  if (!localStorage.getItem('token')) {
+  // Nếu không có token, quay về trang login
+  if (!sessionStorage.getItem('token')) {
     window.location.href = 'sign-in.html';
   }
 </script>

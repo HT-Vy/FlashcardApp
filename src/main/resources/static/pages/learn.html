@@ -251,11 +251,6 @@
                       <button id="bookmarkBtn" aria-label="Bookmark" class="bookmark-btn">
                         <i class="far fa-bookmark"></i>
                       </button>
-
-                      <!-- Share button -->
-                      <!-- <button ria-label="Share" class="">
-                        <i class="fas fa-share-alt text-lg"></i>
-                      </button> -->
                     </div>
                   </div>
 
@@ -354,94 +349,6 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
-
-  <!-- <script>
-  const words = [
-    { en: "interested", vn: "quan tâm" },
-    { en: "generate", vn: "tạo ra" },
-    { en: "water", vn: "nước" },
-    { en: "meeting", vn: "cuộc họp" },
-    { en: "strategy", vn: "chiến lược" }
-  ];
-
-  let currentIndex = 0;
-
-  function updateCardDisplay() {
-    const front = document.getElementById('front');
-    const back = document.getElementById('back');
-    const mode = document.getElementById('displayMode').value;
-    const word = words[currentIndex];
-
-    if (mode === "VN") {
-      front.textContent = "?";
-      back.textContent = word.vn;
-    } else if (mode === "EN") {
-      front.textContent = word.en;
-      back.textContent = "?";
-    } else {
-      front.textContent = word.en;
-      back.textContent = word.vn;
-    }
-
-    document.getElementById('card').classList.add('hidden');
-
-    // Cập nhật vị trí thẻ
-    document.getElementById('card-position').textContent = (currentIndex + 1) + ' / ' + words.length;
-  }
-
-
-  function nextWord() {
-    currentIndex = (currentIndex + 1) % words.length;
-    updateCardDisplay();
-    speakWord();
-  }
-
-  function previousWord() {
-    currentIndex = (currentIndex - 1 + words.length) % words.length;
-    updateCardDisplay();
-    speakWord();
-  }
-
-  function toggleCard() {
-    document.getElementById('card').classList.toggle('hidden');
-    speakWord();
-  }
-
-  function speakWord() {
-    const voiceMode = document.getElementById('voiceMode').value;
-    if (voiceMode === "None") return;
-    const word = words[currentIndex];
-    let utterance = new SpeechSynthesisUtterance(word.en);
-    utterance.lang = voiceMode;
-    speechSynthesis.speak(utterance);
-  }
-
-  function toggleSettings() {
-    const settings = document.getElementById('settings');
-    settings.style.display = settings.style.display === "none" ? "block" : "none";
-  }
-
-  // Load từ đầu tiên
-  updateCardDisplay();
-</script>
--->
-   <script>
-    const bookmarkBtn = document.getElementById('bookmarkBtn');
-    const icon = bookmarkBtn.querySelector('i');
-
-    bookmarkBtn.addEventListener('click', () => {
-      bookmarkBtn.classList.toggle('active');
-
-      if (bookmarkBtn.classList.contains('active')) {
-        icon.classList.remove('far');
-        icon.classList.add('fas');
-      } else {
-        icon.classList.remove('fas');
-        icon.classList.add('far');
-      }
-    });
-  </script> 
-
   <script>
     ; (async function () {
       // 1. Lấy token từ sessionStorage
@@ -471,7 +378,40 @@
         }
         if (!res.ok) throw new Error(res.statusText);
         const data = await res.json();
+        // bắt đầu thiết lập nút Bookmark
+        const bookmarkBtn = document.getElementById('bookmarkBtn');
+        const icon = bookmarkBtn.querySelector('i');
 
+        // 1. Nếu đây là set của chính user, ẩn hẳn nút
+        if (data.ownedByCurrentUser) {
+          bookmarkBtn.style.display = 'none';
+        } else {
+          // 2. Khởi tạo trạng thái ban đầu nếu đã bookmark
+          if (data.collected) {
+            bookmarkBtn.classList.add('active');
+            icon.classList.replace('far','fas');
+          }
+          // 3. Gán sự kiện toggle
+          bookmarkBtn.addEventListener('click', async () => {
+            bookmarkBtn.disabled = true;
+            try {
+              const resToggle = await fetch(`/api/collections/${setId}`, {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + token }
+              });
+              if (!resToggle.ok) throw new Error(resToggle.status);
+              const now = bookmarkBtn.classList.toggle('active');
+              icon.classList.toggle('far', !now);
+              icon.classList.toggle('fas', now);
+            } catch (e) {
+              console.error('Toggle bookmark failed', e);
+              alert('Không thể cập nhật bookmark');
+            } finally {
+              bookmarkBtn.disabled = false;
+            }
+          });
+        }
+        // kết thúc thiết lập nút Bookmark
         // 4. Hiển thị tiêu đề bộ
         document.querySelector('.top-bar h2').innerText = data.title;  // :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
 

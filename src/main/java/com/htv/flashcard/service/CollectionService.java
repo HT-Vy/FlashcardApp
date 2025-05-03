@@ -33,19 +33,14 @@ public class CollectionService {
     public List<FlashcardSet> getUserCollections(Long userId) {
         return userRepository.findById(userId).orElseThrow().getSavedFlashcardSets();
     }
-    // /**
-    //  * Xóa một FlashcardSet khỏi collection của user.
-    //  * @param userId ID người dùng.
-    //  * @param setId ID bộ flashcard cần xóa.
-    //  */
-    // public void removeSetFromCollection(Long userId, Long setId) {
-    //     User user = userRepository.findById(userId)
-    //             .orElseThrow(() -> new EntityNotFoundException("User không tồn tại"));
-    //     FlashcardSet set = flashcardSetRepository.findById(setId)
-    //             .orElseThrow(() -> new EntityNotFoundException("FlashcardSet không tồn tại"));
-
-    //     // Loại bỏ set khỏi tập savedSets và lưu lại
-    //     user.getSavedFlashcardSets().remove(set);
-    //     userRepository.save(user);
-    // }
+    /**
+     * Trả về true nếu user đã lưu set này (dựa trên getUserCollections).
+     */
+    public boolean isCollected(Long userId, Long setId) {
+        // 1. Lấy danh sách đã lưu, trả về List<FlashcardSet> user lưu.
+        List<FlashcardSet> saved = getUserCollections(userId);
+        // 2. Kiểm tra bằng id
+        return saved.stream()
+                    .anyMatch(set -> set.getId().equals(setId));
+    }
 }
