@@ -65,37 +65,55 @@
       const popRes = await fetch('/api/dashboard/popular', { headers });
       const popular = await popRes.json();
       const tbody = document.getElementById('popularTbody');
-      tbody.innerHTML = popular.map(s => `
-        <tr>
-          <td style="padding: 18px">
-            <a href="./learn.html?setId=${s.id}" style="text-decoration:none;">
-              <div class="d-flex px-2">
-                <div class="my-auto">
-                  <h6 class="mb-0 text-base">${s.title}</h6>
+
+      tbody.innerHTML = popular.map(s => {
+        // 1. Thiết lập avatarUrl với fallback
+        let avatarUrl = '../assets/img/avatar.png';     // đường dẫn mặc định
+        if (s.ownerAvatarUrl) {
+          if (s.ownerAvatarUrl.startsWith('http')) {
+            avatarUrl = s.ownerAvatarUrl;
+          } else {
+            avatarUrl = window.location.origin + s.ownerAvatarUrl;
+          }
+        }
+
+        return `
+          <tr>
+            <td style="padding: 18px">
+              <a href="./learn.html?setId=${s.id}" style="text-decoration:none;">
+                <div class="d-flex px-2">
+                  <div class="my-auto">
+                    <h6 class="mb-0 text-base">${s.title}</h6>
+                  </div>
                 </div>
-              </div>
-            </a>
-          </td>
-          <td>
-            <p class="text-base font-weight-normal mb-0">${s.savedByCount}</p>
-          </td>
-          <td>
-            <span class="text-base font-weight-normal">${new Date(s.lastStudiedAt).toLocaleString()}</span>
-          </td>
-          <td class="align-middle">
-            <div class="d-flex">
+              </a>
+            </td>
+            <td>
+              <p class="text-base font-weight-normal mb-0">${s.savedByCount}</p>
+            </td>
+            <td>
+              <span class="text-base font-weight-normal">
+                ${new Date(s.lastStudiedAt).toLocaleString()}
+              </span>
+            </td>
+            <td class="align-middle">
               <div class="d-flex align-items-center">
-                <img src="../assets/img/user-avatar.png" class="avatar avatar-sm rounded-circle me-2" alt="user">
+                <img 
+                  src="${avatarUrl}" 
+                  class="avatar avatar-sm rounded-circle me-2" 
+                  alt="Avatar ${s.ownerName}"
+                />
+                <a href="./profile.html" class="text-dark text-base mb-0">
+                  ${s.ownerName}
+                </a>
               </div>
-              <div class="ms-2">
-                <a href="./profile.html" class="text-dark text-base mb-0">${s.ownerName}</a>
-              </div>
-            </div>
-          </td>
-        </tr>
-      `).join('');
+            </td>
+          </tr>
+        `;
+      }).join('');
     } catch (err) {
       console.error('Error fetching popular sets:', err);
     }
+
   })();
   

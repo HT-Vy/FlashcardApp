@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.htv.flashcard.DTO.FlashcardBatchDTO;
 import com.htv.flashcard.DTO.FlashcardDTO;
 import com.htv.flashcard.DTO.FlashcardSetDTO;
 import com.htv.flashcard.DTO.FlashcardSetDetailDTO;
 import com.htv.flashcard.model.FlashcardSet;
 import com.htv.flashcard.model.User;
+import com.htv.flashcard.repository.FlashcardSetRepository;
 import com.htv.flashcard.service.FlashcardSetService;
 import com.htv.flashcard.service.UserService;
 
@@ -35,6 +39,9 @@ public class FlashcardSetController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FlashcardSetRepository flashcardSetRepository;
 
     /**
      * Tạo bộ flashcard mới
@@ -126,6 +133,33 @@ public class FlashcardSetController {
             FlashcardDTO fd = new FlashcardDTO(); fd.setFrontContent(f.getFrontContent()); fd.setBackContent(f.getBackContent()); return fd;
         }).collect(Collectors.toList()));
         return ResponseEntity.ok(dto);
+    }
+
+     @PostMapping("/{setId}/flashcards/batch")
+    public ResponseEntity<?> addFlashcardsBatch(
+            @PathVariable Long setId,
+            @RequestBody FlashcardBatchDTO batchDto,
+            @AuthenticationPrincipal UserDetails ud    // lấy user đã login
+    ) {
+        // 1. Lấy entity User từ email trong token
+        User user = userService.findByEmail(ud.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy user"));
+
+        // 2. Load FlashcardSet để kiểm tra quyền
+        FlashcardSet set = flashcardSetRepository.findById(setId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Không tìm thấy bộ flashcard"));
+
+        // 3. Nếu không phải owner thì trả 403
+        if (!set.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "Bạn không có quyền thêm flashcard vào bộ này");
+        }
+
+        // 4. Gọi service để xử lý lưu batch
+        flashcardSetService.addFlashcardsBatch(setId, batchDto.getFlashcards());
+
+        return ResponseEntity.ok("Thêm flashcards thành công");
     }
 }
 

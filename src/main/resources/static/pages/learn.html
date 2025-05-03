@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +10,9 @@
     Flashcard - Học
   </title>
   <!--     Fonts and icons     -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Noto+Sans:300,400,500,600,700,800|PT+Mono:300,400,500,600,700" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Noto+Sans:300,400,500,600,700,800|PT+Mono:300,400,500,600,700"
+    rel="stylesheet" />
   <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
@@ -20,23 +21,24 @@
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/corporate-ui-dashboard.css?v=1.0.0" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="../assets/css/flashcard-style.css">
-    
+
 </head>
 <script>
-  // Nếu không có token, quay về login
-  if (!localStorage.getItem('token')) {
+  // Nếu không có token, quay về trang login
+  if (!sessionStorage.getItem('token')) {
     window.location.href = 'sign-in.html';
   }
 </script>
-
+<style></style>
 
 <body class="g-sidenav-show  bg-gray-100">
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 bg-slate-900 fixed-start " id="sidenav-main">
     <div class="sidenav-header">
-      <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+      <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+        aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand d-flex align-items-center m-0" href="../pages/dashboard.html" target="_blank">
         <span class="font-weight-bold text-lg">Flashcard</span>
       </a>
@@ -46,13 +48,20 @@
         <li class="nav-item">
           <a class="nav-link " href="../pages/dashboard.html">
             <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
-              <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>Trang Chủ</title>
                 <g id="dashboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="template" transform="translate(12.000000, 12.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                    <path class="color-foreground" d="M0,1.71428571 C0,0.76752 0.76752,0 1.71428571,0 L22.2857143,0 C23.2325143,0 24,0.76752 24,1.71428571 L24,5.14285714 C24,6.08962286 23.2325143,6.85714286 22.2857143,6.85714286 L1.71428571,6.85714286 C0.76752,6.85714286 0,6.08962286 0,5.14285714 L0,1.71428571 Z" id="Path"></path>
-                    <path class="color-background" d="M0,12 C0,11.0532171 0.76752,10.2857143 1.71428571,10.2857143 L12,10.2857143 C12.9468,10.2857143 13.7142857,11.0532171 13.7142857,12 L13.7142857,22.2857143 C13.7142857,23.2325143 12.9468,24 12,24 L1.71428571,24 C0.76752,24 0,23.2325143 0,22.2857143 L0,12 Z" id="Path"></path>
-                    <path class="color-background" d="M18.8571429,10.2857143 C17.9103429,10.2857143 17.1428571,11.0532171 17.1428571,12 L17.1428571,22.2857143 C17.1428571,23.2325143 17.9103429,24 18.8571429,24 L22.2857143,24 C23.2325143,24 24,23.2325143 24,22.2857143 L24,12 C24,11.0532171 23.2325143,10.2857143 22.2857143,10.2857143 L18.8571429,10.2857143 Z" id="Path"></path>
+                    <path class="color-foreground"
+                      d="M0,1.71428571 C0,0.76752 0.76752,0 1.71428571,0 L22.2857143,0 C23.2325143,0 24,0.76752 24,1.71428571 L24,5.14285714 C24,6.08962286 23.2325143,6.85714286 22.2857143,6.85714286 L1.71428571,6.85714286 C0.76752,6.85714286 0,6.08962286 0,5.14285714 L0,1.71428571 Z"
+                      id="Path"></path>
+                    <path class="color-background"
+                      d="M0,12 C0,11.0532171 0.76752,10.2857143 1.71428571,10.2857143 L12,10.2857143 C12.9468,10.2857143 13.7142857,11.0532171 13.7142857,12 L13.7142857,22.2857143 C13.7142857,23.2325143 12.9468,24 12,24 L1.71428571,24 C0.76752,24 0,23.2325143 0,22.2857143 L0,12 Z"
+                      id="Path"></path>
+                    <path class="color-background"
+                      d="M18.8571429,10.2857143 C17.9103429,10.2857143 17.1428571,11.0532171 17.1428571,12 L17.1428571,22.2857143 C17.1428571,23.2325143 17.9103429,24 18.8571429,24 L22.2857143,24 C23.2325143,24 24,23.2325143 24,22.2857143 L24,12 C24,11.0532171 23.2325143,10.2857143 22.2857143,10.2857143 L18.8571429,10.2857143 Z"
+                      id="Path"></path>
                   </g>
                 </g>
               </svg>
@@ -63,14 +72,23 @@
         <li class="nav-item">
           <a class="nav-link  " href="../pages/collection.html">
             <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
-              <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>Thư viện của tôi</title>
                 <g id="table" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="view-grid" transform="translate(12.000000, 12.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                    <path class="color-foreground" d="M3.42857143,0 C1.53502286,0 0,1.53502286 0,3.42857143 L0,6.85714286 C0,8.75069143 1.53502286,10.2857143 3.42857143,10.2857143 L6.85714286,10.2857143 C8.75069143,10.2857143 10.2857143,8.75069143 10.2857143,6.85714286 L10.2857143,3.42857143 C10.2857143,1.53502286 8.75069143,0 6.85714286,0 L3.42857143,0 Z" id="Path"></path>
-                    <path class="color-background" d="M3.42857143,13.7142857 C1.53502286,13.7142857 0,15.2492571 0,17.1428571 L0,20.5714286 C0,22.4650286 1.53502286,24 3.42857143,24 L6.85714286,24 C8.75069143,24 10.2857143,22.4650286 10.2857143,20.5714286 L10.2857143,17.1428571 C10.2857143,15.2492571 8.75069143,13.7142857 6.85714286,13.7142857 L3.42857143,13.7142857 Z" id="Path"></path>
-                    <path class="color-background" d="M13.7142857,3.42857143 C13.7142857,1.53502286 15.2492571,0 17.1428571,0 L20.5714286,0 C22.4650286,0 24,1.53502286 24,3.42857143 L24,6.85714286 C24,8.75069143 22.4650286,10.2857143 20.5714286,10.2857143 L17.1428571,10.2857143 C15.2492571,10.2857143 13.7142857,8.75069143 13.7142857,6.85714286 L13.7142857,3.42857143 Z" id="Path"></path>
-                    <path class="color-foreground" d="M13.7142857,17.1428571 C13.7142857,15.2492571 15.2492571,13.7142857 17.1428571,13.7142857 L20.5714286,13.7142857 C22.4650286,13.7142857 24,15.2492571 24,17.1428571 L24,20.5714286 C24,22.4650286 22.4650286,24 20.5714286,24 L17.1428571,24 C15.2492571,24 13.7142857,22.4650286 13.7142857,20.5714286 L13.7142857,17.1428571 Z" id="Path"></path>
+                    <path class="color-foreground"
+                      d="M3.42857143,0 C1.53502286,0 0,1.53502286 0,3.42857143 L0,6.85714286 C0,8.75069143 1.53502286,10.2857143 3.42857143,10.2857143 L6.85714286,10.2857143 C8.75069143,10.2857143 10.2857143,8.75069143 10.2857143,6.85714286 L10.2857143,3.42857143 C10.2857143,1.53502286 8.75069143,0 6.85714286,0 L3.42857143,0 Z"
+                      id="Path"></path>
+                    <path class="color-background"
+                      d="M3.42857143,13.7142857 C1.53502286,13.7142857 0,15.2492571 0,17.1428571 L0,20.5714286 C0,22.4650286 1.53502286,24 3.42857143,24 L6.85714286,24 C8.75069143,24 10.2857143,22.4650286 10.2857143,20.5714286 L10.2857143,17.1428571 C10.2857143,15.2492571 8.75069143,13.7142857 6.85714286,13.7142857 L3.42857143,13.7142857 Z"
+                      id="Path"></path>
+                    <path class="color-background"
+                      d="M13.7142857,3.42857143 C13.7142857,1.53502286 15.2492571,0 17.1428571,0 L20.5714286,0 C22.4650286,0 24,1.53502286 24,3.42857143 L24,6.85714286 C24,8.75069143 22.4650286,10.2857143 20.5714286,10.2857143 L17.1428571,10.2857143 C15.2492571,10.2857143 13.7142857,8.75069143 13.7142857,6.85714286 L13.7142857,3.42857143 Z"
+                      id="Path"></path>
+                    <path class="color-foreground"
+                      d="M13.7142857,17.1428571 C13.7142857,15.2492571 15.2492571,13.7142857 17.1428571,13.7142857 L20.5714286,13.7142857 C22.4650286,13.7142857 24,15.2492571 24,17.1428571 L24,20.5714286 C24,22.4650286 22.4650286,24 20.5714286,24 L17.1428571,24 C15.2492571,24 13.7142857,22.4650286 13.7142857,20.5714286 L13.7142857,17.1428571 Z"
+                      id="Path"></path>
                   </g>
                 </g>
               </svg>
@@ -81,12 +99,17 @@
         <li class="nav-item">
           <a class="nav-link  active" href="../pages/learn.html">
             <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
-              <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>Học</title>
                 <g id="wallet" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="credit-card" transform="translate(12.000000, 15.000000)" fill="#FFFFFF">
-                    <path class="color-background" d="M3,0 C1.343145,0 0,1.343145 0,3 L0,4.5 L24,4.5 L24,3 C24,1.343145 22.6569,0 21,0 L3,0 Z" id="Path" fill-rule="nonzero"></path>
-                    <path class="color-foreground" d="M24,7.5 L0,7.5 L0,15 C0,16.6569 1.343145,18 3,18 L21,18 C22.6569,18 24,16.6569 24,15 L24,7.5 Z M3,13.5 C3,12.67155 3.67158,12 4.5,12 L6,12 C6.82842,12 7.5,12.67155 7.5,13.5 C7.5,14.32845 6.82842,15 6,15 L4.5,15 C3.67158,15 3,14.32845 3,13.5 Z M10.5,12 C9.67158,12 9,12.67155 9,13.5 C9,14.32845 9.67158,15 10.5,15 L12,15 C12.82845,15 13.5,14.32845 13.5,13.5 C13.5,12.67155 12.82845,12 12,12 L10.5,12 Z" id="Shape"></path>
+                    <path class="color-background"
+                      d="M3,0 C1.343145,0 0,1.343145 0,3 L0,4.5 L24,4.5 L24,3 C24,1.343145 22.6569,0 21,0 L3,0 Z"
+                      id="Path" fill-rule="nonzero"></path>
+                    <path class="color-foreground"
+                      d="M24,7.5 L0,7.5 L0,15 C0,16.6569 1.343145,18 3,18 L21,18 C22.6569,18 24,16.6569 24,15 L24,7.5 Z M3,13.5 C3,12.67155 3.67158,12 4.5,12 L6,12 C6.82842,12 7.5,12.67155 7.5,13.5 C7.5,14.32845 6.82842,15 6,15 L4.5,15 C3.67158,15 3,14.32845 3,13.5 Z M10.5,12 C9.67158,12 9,12.67155 9,13.5 C9,14.32845 9.67158,15 10.5,15 L12,15 C12.82845,15 13.5,14.32845 13.5,13.5 C13.5,12.67155 12.82845,12 12,12 L10.5,12 Z"
+                      id="Shape"></path>
                   </g>
                 </g>
               </svg>
@@ -97,13 +120,20 @@
         <li class="nav-item">
           <a class="nav-link  " href="../pages/flashcardset.html">
             <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
-              <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>Tạo Bộ sưu tập</title>
                 <g id="rtl" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <g id="menu-alt-3" transform="translate(12.000000, 14.000000)" fill="#FFFFFF">
-                    <path class="color-foreground" d="M0,1.71428571 C0,0.76752 0.76752,0 1.71428571,0 L22.2857143,0 C23.2325143,0 24,0.76752 24,1.71428571 C24,2.66105143 23.2325143,3.42857143 22.2857143,3.42857143 L1.71428571,3.42857143 C0.76752,3.42857143 0,2.66105143 0,1.71428571 Z" id="Path"></path>
-                    <path class="color-background" d="M0,10.2857143 C0,9.33894857 0.76752,8.57142857 1.71428571,8.57142857 L22.2857143,8.57142857 C23.2325143,8.57142857 24,9.33894857 24,10.2857143 C24,11.2325143 23.2325143,12 22.2857143,12 L1.71428571,12 C0.76752,12 0,11.2325143 0,10.2857143 Z" id="Path"></path>
-                    <path class="color-background" d="M10.2857143,18.8571429 C10.2857143,17.9103429 11.0532343,17.1428571 12,17.1428571 L22.2857143,17.1428571 C23.2325143,17.1428571 24,17.9103429 24,18.8571429 C24,19.8039429 23.2325143,20.5714286 22.2857143,20.5714286 L12,20.5714286 C11.0532343,20.5714286 10.2857143,19.8039429 10.2857143,18.8571429 Z" id="Path"></path>
+                    <path class="color-foreground"
+                      d="M0,1.71428571 C0,0.76752 0.76752,0 1.71428571,0 L22.2857143,0 C23.2325143,0 24,0.76752 24,1.71428571 C24,2.66105143 23.2325143,3.42857143 22.2857143,3.42857143 L1.71428571,3.42857143 C0.76752,3.42857143 0,2.66105143 0,1.71428571 Z"
+                      id="Path"></path>
+                    <path class="color-background"
+                      d="M0,10.2857143 C0,9.33894857 0.76752,8.57142857 1.71428571,8.57142857 L22.2857143,8.57142857 C23.2325143,8.57142857 24,9.33894857 24,10.2857143 C24,11.2325143 23.2325143,12 22.2857143,12 L1.71428571,12 C0.76752,12 0,11.2325143 0,10.2857143 Z"
+                      id="Path"></path>
+                    <path class="color-background"
+                      d="M10.2857143,18.8571429 C10.2857143,17.9103429 11.0532343,17.1428571 12,17.1428571 L22.2857143,17.1428571 C23.2325143,17.1428571 24,17.9103429 24,18.8571429 C24,19.8039429 23.2325143,20.5714286 22.2857143,20.5714286 L12,20.5714286 C11.0532343,20.5714286 10.2857143,19.8039429 10.2857143,18.8571429 Z"
+                      id="Path"></path>
                   </g>
                 </g>
               </svg>
@@ -113,8 +143,11 @@
         </li>
         <li class="nav-item mt-2">
           <div class="d-flex align-items-center nav-link">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="ms-2" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-              <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="ms-2" viewBox="0 0 24 24"
+              fill="currentColor" class="w-6 h-6">
+              <path fill-rule="evenodd"
+                d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+                clip-rule="evenodd" />
             </svg>
             <span class="font-weight-normal text-md ms-2">Tài khoản</span>
           </div>
@@ -122,16 +155,6 @@
         <li class="nav-item border-start my-0 pt-2">
           <a class="nav-link position-relative ms-0 ps-2 py-2 " href="../pages/profile.html">
             <span class="nav-link-text ms-1">Hồ Sơ</span>
-          </a>
-        </li>
-        <li class="nav-item border-start my-0 pt-2">
-          <a class="nav-link position-relative ms-0 ps-2 py-2 " href="../pages/sign-in.html">
-            <span class="nav-link-text ms-1">Đăng nhập</span>
-          </a>
-        </li>
-        <li class="nav-item border-start my-0 pt-2">
-          <a class="nav-link position-relative ms-0 ps-2 py-2 " href="../pages/sign-up.html">
-            <span class="nav-link-text ms-1">Đăng ký</span>
           </a>
         </li>
       </ul>
@@ -159,7 +182,9 @@
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg mx-5 px-0 shadow-none rounded position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky" id="navbarBlur" navbar-scroll="true">
+    <nav
+      class="navbar navbar-main navbar-expand-lg mx-5 px-0 shadow-none rounded position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky"
+      id="navbarBlur" navbar-scroll="true">
       <div class="container-fluid py-1 px-2">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-1 pb-0 pt-1 px-0 me-sm-6 me-5">
@@ -172,8 +197,10 @@
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
             <div class="input-group">
               <span class="input-group-text text-body bg-white  border-end-0 ">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="none" viewBox="0 0 24 24"
+                  stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                 </svg>
               </span>
               <input type="text" class="form-control ps-0" placeholder="Search">
@@ -189,13 +216,14 @@
                 </div>
               </a>
             </li>
-        
+
             <li class="nav-item ps-2 d-flex align-items-center">
               <a href="./profile.html" class="nav-link text-body p-0">
-                <img id="navbarAvatar" src="./uploads/default-avatar.png" class="avatar avatar-sm"  alt="avatar" />
+                <img id="navbarAvatar" src="../assets/img/avatar.png" class="avatar avatar-sm" alt="avatar" />
               </a>
               <!-- Nút logout ẩn sẵn -->
-              <button id="logoutBtn" class="btn btn-sm btn-light position-absolute" style="top: 110%; right: 0; display: none;">
+              <button id="logoutBtn" class="btn btn-sm btn-light position-absolute"
+                style="top: 110%; right: 0; display: none;">
                 Đăng xuất
               </button>
             </li>
@@ -215,205 +243,108 @@
               <div>
                 <div class="max-w-4xl mx-auto">
                   <div class="top-bar flex items-center justify-between">
-                    <h2 class="text-gray-700 font-semibold text-[16px] leading-[40px]">
-                      Unit 9. Social issues
+                    <h2 id="setTitle" class="text-gray-700 font-semibold text-[16px] leading-[40px]">
+
                     </h2>
                     <div class="flex space-x-4 ">
                       <!-- Bookmark button -->
                       <button id="bookmarkBtn" aria-label="Bookmark" class="bookmark-btn">
                         <i class="far fa-bookmark"></i>
                       </button>
-              
+
                       <!-- Share button -->
                       <!-- <button ria-label="Share" class="">
                         <i class="fas fa-share-alt text-lg"></i>
                       </button> -->
                     </div>
                   </div>
-              
-                  
-              </div>
-          
-              <div class="flashcard-wrapper">
-                
-                <button onclick="previousWord()" aria-label="Previous" class="arrow-button flex items-center justify-center w-12 h-12 rounded-full border border-gray-300 text-gray-600 hover:text-gray-800 focus:outline-none">
-                  <i class="fas fa-arrow-left text-lg"></i>
-                </button>
-                <div class="card hidden" id="card" onclick="toggleCard()">
-                  <div class="card-inner">
-                    <div class="card-face front" id="front">Word</div>
-                    <div class="card-face back" id="back">?</div>
-                  </div>
+
+
                 </div>
-                <button onclick="nextWord()"  aria-label="Previous" class="arrow-button flex items-center justify-center w-12 h-12 rounded-full border border-gray-300 text-gray-600 hover:text-gray-800 focus:outline-none">
-                  <i class="fas fa-arrow-right text-lg"></i>
-                </button>
-              </div>
-              <div class="button-container">
-                <button class="circle-button not-completed">✗</button>
-                <span id="card-position" class="text-gray-700 text-base font-weight-bold select-none">1 / 5</span>
-                <button class="circle-button completed">✓</button>
-                
-              </div>
-  
-              <div>
-                <span class="settings-icon" onclick="toggleSettings()">⚙</span>
-                <div id="settings" style="display: none;">
-                  <label>Hiển thị:
-                    <select id="displayMode" onchange="updateCardDisplay()">
-                      <option value="VN">VN</option>
-                      <option value="EN">EN</option>
-                      <option value="None">None</option>
-                    </select>
-                  </label>
-                  <label>Giọng đọc:
-                    <select id="voiceMode">
-                      <option value="en-US">Anh - Mỹ</option>
-                      <option value="en-GB">Anh - Anh</option>
-                      <option value="None">Không đọc</option>
-                    </select>
-                  </label>
+
+                <div class="flashcard-wrapper">
+
+                  <button onclick="previousWord()" aria-label="Previous"
+                    class="arrow-button flex items-center justify-center w-12 h-12 rounded-full border border-gray-300 text-gray-600 hover:text-gray-800 focus:outline-none">
+                    <i class="fas fa-arrow-left text-lg"></i>
+                  </button>
+                  <div class="card hidden" id="card" onclick="toggleCard()">
+                    <div class="card-inner">
+                      <div class="card-face front" id="front">Word</div>
+                      <div class="card-face back" id="back">?</div>
+                    </div>
+                  </div>
+                  <button onclick="nextWord()" aria-label="Previous"
+                    class="arrow-button flex items-center justify-center w-12 h-12 rounded-full border border-gray-300 text-gray-600 hover:text-gray-800 focus:outline-none">
+                    <i class="fas fa-arrow-right text-lg"></i>
+                  </button>
+                </div>
+                <div class="button-container">
+                  <button class="circle-button not-completed">✗</button>
+                  <span id="card-position" class="text-gray-700 text-base font-weight-bold select-none"> </span>
+                  <button class="circle-button completed">✓</button>
+
+                </div>
+
+                <div>
+                  <span class="settings-icon" onclick="toggleSettings()">⚙</span>
+                  <div id="settings" style="display: none;">
+                    <label>Hiển thị:
+                      <select id="displayMode" onchange="updateCardDisplay()">
+                        <option value="VN">VN</option>
+                        <option value="EN">EN</option>
+                        <option value="None">Tất cả</option>
+                      </select>
+                    </label>
+                    <label>Giọng đọc:
+                      <select id="voiceMode">
+                        <option value="en-US">Anh - Mỹ</option>
+                        <option value="en-GB">Anh - Anh</option>
+                        <option value="None">Không đọc</option>
+                      </select>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <hr class="my-0">
-      <div class="row">
-        <!-- phần hiển thị ds thẻ -->
-        <div class="col-md-12">
-          <div class="max-w-4xl mx-auto">
-            <table class="vocab-table">
-              <thead>
-                <tr>
-                  <th>English</th>
-                  <th>Vietnamese</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>indicate</td>
-                  <td>chỉ ra</td>
-                </tr>
-                <tr>
-                  <td>ceremony</td>
-                  <td>nghi lễ</td>
-                </tr>
-                <tr>
-                  <td>prize</td>
-                  <td>giải thưởng</td>
-                </tr>
-                <tr>
-                  <td>engrave</td>
-                  <td>khắc sâu</td>
-                </tr>
-                <tr>
-                  <td>approve</td>
-                  <td>phê duyệt, chấp thuận</td>
-                </tr>
-                <tr>
-                  <td>strategy</td>
-                  <td>chiến lược</td>
-                </tr>
-                <tr>
-                  <td>purchases</td>
-                  <td>mua, sắm</td>
-                </tr>
-                <tr>
-                  <td>certain</td>
-                  <td>chắc chắn</td>
-                </tr>
-              </tbody>
-            </table>
+        <hr class="my-0">
+        <div class="row">
+          <!-- phần hiển thị ds thẻ -->
+          <div class="col-md-12">
+            <div class="max-w-4xl mx-auto">
+              <table class="vocab-table">
+                <thead>
+                  <tr>
+                    <th>English</th>
+                    <th>Vietnamese</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- JS sẽ fill vào đây -->
+                </tbody>
+              </table>
+            </div>
+
+
           </div>
-
-
         </div>
+
+
+
+
       </div>
-      
-      
-    
-    
-    </div>
   </main>
-  
+
   <!--   Core JS Files   -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
-  <script>
-    const words = [
-      { en: "interested", vn: "quan tâm" },
-      { en: "generate", vn: "tạo ra" },
-      { en: "water", vn: "nước" },
-      { en: "meeting", vn: "cuộc họp" },
-      { en: "strategy", vn: "chiến lược" }
-    ];
 
-    let currentIndex = 0;
-
-    function updateCardDisplay() {
-      const front = document.getElementById('front');
-      const back = document.getElementById('back');
-      const mode = document.getElementById('displayMode').value;
-      const word = words[currentIndex];
-
-      if (mode === "VN") {
-        front.textContent = "?";
-        back.textContent = word.vn;
-      } else if (mode === "EN") {
-        front.textContent = word.en;
-        back.textContent = "?";
-      } else {
-        front.textContent = word.en;
-        back.textContent = word.vn;
-      }
-
-      document.getElementById('card').classList.add('hidden');
-
-      // Cập nhật vị trí thẻ
-      document.getElementById('card-position').textContent = (currentIndex + 1) + ' / ' + words.length;
-    }
-
-
-    function nextWord() {
-      currentIndex = (currentIndex + 1) % words.length;
-      updateCardDisplay();
-      speakWord();
-    }
-
-    function previousWord() {
-      currentIndex = (currentIndex - 1 + words.length) % words.length;
-      updateCardDisplay();
-      speakWord();
-    }
-
-    function toggleCard() {
-      document.getElementById('card').classList.toggle('hidden');
-      speakWord();
-    }
-
-    function speakWord() {
-      const voiceMode = document.getElementById('voiceMode').value;
-      if (voiceMode === "None") return;
-      const word = words[currentIndex];
-      let utterance = new SpeechSynthesisUtterance(word.en);
-      utterance.lang = voiceMode;
-      speechSynthesis.speak(utterance);
-    }
-
-    function toggleSettings() {
-      const settings = document.getElementById('settings');
-      settings.style.display = settings.style.display === "none" ? "block" : "none";
-    }
-
-    // Load từ đầu tiên
-    updateCardDisplay();
-  </script>
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -423,6 +354,77 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
+
+  <!-- <script>
+  const words = [
+    { en: "interested", vn: "quan tâm" },
+    { en: "generate", vn: "tạo ra" },
+    { en: "water", vn: "nước" },
+    { en: "meeting", vn: "cuộc họp" },
+    { en: "strategy", vn: "chiến lược" }
+  ];
+
+  let currentIndex = 0;
+
+  function updateCardDisplay() {
+    const front = document.getElementById('front');
+    const back = document.getElementById('back');
+    const mode = document.getElementById('displayMode').value;
+    const word = words[currentIndex];
+
+    if (mode === "VN") {
+      front.textContent = "?";
+      back.textContent = word.vn;
+    } else if (mode === "EN") {
+      front.textContent = word.en;
+      back.textContent = "?";
+    } else {
+      front.textContent = word.en;
+      back.textContent = word.vn;
+    }
+
+    document.getElementById('card').classList.add('hidden');
+
+    // Cập nhật vị trí thẻ
+    document.getElementById('card-position').textContent = (currentIndex + 1) + ' / ' + words.length;
+  }
+
+
+  function nextWord() {
+    currentIndex = (currentIndex + 1) % words.length;
+    updateCardDisplay();
+    speakWord();
+  }
+
+  function previousWord() {
+    currentIndex = (currentIndex - 1 + words.length) % words.length;
+    updateCardDisplay();
+    speakWord();
+  }
+
+  function toggleCard() {
+    document.getElementById('card').classList.toggle('hidden');
+    speakWord();
+  }
+
+  function speakWord() {
+    const voiceMode = document.getElementById('voiceMode').value;
+    if (voiceMode === "None") return;
+    const word = words[currentIndex];
+    let utterance = new SpeechSynthesisUtterance(word.en);
+    utterance.lang = voiceMode;
+    speechSynthesis.speak(utterance);
+  }
+
+  function toggleSettings() {
+    const settings = document.getElementById('settings');
+    settings.style.display = settings.style.display === "none" ? "block" : "none";
+  }
+
+  // Load từ đầu tiên
+  updateCardDisplay();
+</script>
+-->
    <script>
     const bookmarkBtn = document.getElementById('bookmarkBtn');
     const icon = bookmarkBtn.querySelector('i');
@@ -438,15 +440,133 @@
         icon.classList.add('far');
       }
     });
+  </script> 
+
+  <script>
+    ; (async function () {
+      // 1. Lấy token từ sessionStorage
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        window.location.href = 'sign-in.html';
+        return;
+      }
+      const headers = {
+        'Authorization': 'Bearer ' + token,
+        'Accept': 'application/json'
+      };
+
+      // 2. Lấy setId từ URL
+      const params = new URLSearchParams(window.location.search);
+      const setId = params.get('setId');
+      if (!setId) return alert('Không xác định được bộ flashcard');
+
+      let flashcards = [];
+      try {
+        // 3. Gọi API lấy dữ liệu bộ flashcard
+        const res = await fetch(`/api/sets/${setId}`, { headers });
+        if (res.status === 401) {
+          // nếu token hết hạn hoặc không hợp lệ → chuyển về login
+          sessionStorage.removeItem('token');
+          return window.location.href = 'sign-in.html';
+        }
+        if (!res.ok) throw new Error(res.statusText);
+        const data = await res.json();
+
+        // 4. Hiển thị tiêu đề bộ
+        document.querySelector('.top-bar h2').innerText = data.title;  // :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
+
+        flashcards = data.flashcards;
+      } catch (e) {
+        console.error('Lỗi tải dữ liệu bộ flashcard:', e);
+        return alert('Lỗi tải dữ liệu bộ flashcard');
+      }
+
+      // 5. Map thành mảng từ để dùng cho flashcard và table
+      const words = flashcards.map(f => ({
+        en: f.frontContent,
+        vn: f.backContent
+      }));  // :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
+
+      let currentIndex = 0;
+
+      // 6. Build bảng từ vựng
+      const tbody = document.querySelector('.vocab-table tbody');
+      tbody.innerHTML = words.map(w =>
+        `<tr><td>${w.en}</td><td>${w.vn}</td></tr>`
+      ).join('');
+
+      // 7. Các hàm hiển thị và điều khiển flashcard
+      const cardEl = document.getElementById('card');
+      function updateCardDisplay() {
+        // reset về mặt trước
+        cardEl.classList.remove('flipped');
+
+        const front = document.getElementById('front');
+        const back = document.getElementById('back');
+        const mode = document.getElementById('displayMode').value;
+        const w = words[currentIndex];
+
+        if (mode === 'VN') {
+          front.textContent = '?';
+          back.textContent = w.vn;
+        } else if (mode === 'EN') {
+          front.textContent = w.en;
+          back.textContent = '?';
+        } else {
+          front.textContent = w.en;
+          back.textContent = w.vn;
+        }
+
+        document.getElementById('card-position')
+          .textContent = `${currentIndex + 1} / ${words.length}`;
+      }
+
+      function nextWord() {
+        currentIndex = (currentIndex + 1) % words.length;
+        updateCardDisplay(); speakWord();
+      }
+      function previousWord() {
+        currentIndex = (currentIndex - 1 + words.length) % words.length;
+        updateCardDisplay(); speakWord();
+      }
+      function toggleCard() {
+        cardEl.classList.toggle('flipped');
+        speakWord();
+      }
+      function speakWord() {
+        const voice = document.getElementById('voiceMode').value;
+        if (voice === 'None') return;
+        const u = new SpeechSynthesisUtterance(words[currentIndex].en);
+        u.lang = voice;
+        speechSynthesis.speak(u);
+      }
+      function toggleSettings() {
+        const s = document.getElementById('settings');
+        s.style.display = s.style.display === 'none' ? 'block' : 'none';
+      }
+
+      // 8. Gán sự kiện (giữ nguyên selector inline)
+      cardEl.addEventListener('click', toggleCard);
+      document.querySelector('[onclick="nextWord()"]')
+        .addEventListener('click', nextWord);
+      document.querySelector('[onclick="previousWord()"]')
+        .addEventListener('click', previousWord);
+      document.getElementById('displayMode')
+        .addEventListener('change', updateCardDisplay);
+      document.querySelector('.settings-icon')
+        .addEventListener('click', toggleSettings);
+
+      // 9. Chạy khởi tạo
+      updateCardDisplay();
+    })();
   </script>
-  
-    
+
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/corporate-ui-dashboard.min.js?v=1.0.0"></script>
   <script src="../assets/js/navbar.js"></script>
-
+  <!-- <script src="../assets/js/learn.js"></script> -->
 </body>
 
 
