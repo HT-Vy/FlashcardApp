@@ -14,6 +14,7 @@ import com.htv.flashcard.model.User;
 import com.htv.flashcard.repository.FlashcardRepository;
 import com.htv.flashcard.repository.FlashcardSetRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -48,15 +49,25 @@ public class FlashcardSetService {
 
     @Transactional
     public void addFlashcardsBatch(Long setId, List<FlashcardDTO> dtos) {
+        // 1) Lấy entity FlashcardSet
         FlashcardSet set = flashcardSetRepo.findById(setId)
-            .orElseThrow(() -> new RuntimeException("Không tìm thấy set"));
-        List<Flashcard> cards = dtos.stream().map(dto -> {
-        Flashcard f = new Flashcard();
-        f.setFrontContent(dto.getFrontContent());
-        f.setBackContent(dto.getBackContent());
-        f.setFlashcardSet(set);
-        return f;
+            .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy bộ flashcard"));
+
+        // 2) Xóa hết flashcard cũ(với orphanRemoval=true, Hibernate sẽ delete DB rows)
+        set.getFlashcards().clear();
+        
+        // 3) Thêm lại tất cả flashcard mới
+        List<Flashcard> newCards = dtos.stream().map(d -> {
+            Flashcard f = new Flashcard();
+            f.setFrontContent(d.getFrontContent());
+            f.setBackContent(d.getBackContent());
+            f.setFlashcardSet(set);
+            return f;
         }).collect(Collectors.toList());
-        flashcardRepo.saveAll(cards);
+        set.getFlashcards().addAll(newCards);
+
+        // 4) Lưu set (các flashcard sẽ được cascade)
+        flashcardSetRepo.save(set);
     }
+
 }

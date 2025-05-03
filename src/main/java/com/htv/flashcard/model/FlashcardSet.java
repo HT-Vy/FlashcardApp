@@ -35,7 +35,7 @@ public class FlashcardSet {
     @JsonBackReference 
     private User user;
 
-    @OneToMany(mappedBy = "flashcardSet", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "flashcardSet", cascade = CascadeType.ALL, orphanRemoval = true)//xóa các pt con khi k còn qh với cha
     private List<Flashcard> flashcards = new ArrayList<>();
     
     

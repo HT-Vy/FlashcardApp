@@ -23,11 +23,12 @@
   <link rel="stylesheet" href="../assets/css/flashcardset-style.css">
 </head>
 <script>
-  // Nếu không có token, quay về login
-  if (!localStorage.getItem('token')) {
+  // Dùng sessionStorage như các trang khác
+  if (!sessionStorage.getItem('token')) {
     window.location.href = 'sign-in.html';
   }
 </script>
+
 
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -188,14 +189,6 @@
         <div class="col-md-12">
           <div class="container ">
             <h1>Tạo một học phần mới</h1>
-            <!-- Phần chọn Public hay Không Public (Nút gạt) -->
-            <div class="toggle-wrapper" style="float: right; ">
-              <label for="public">Công khai:</label>
-              <label class="toggle">
-                <input type="checkbox" id="public">
-                <span class="slider"></span>
-              </label>
-            </div>
             <input type="text" id="title" placeholder='Nhập tiêu đề, ví dụ "Sinh học - Chương 22: Tiến hóa"'/>
             
             <textarea id="description" rows="3" placeholder="Thêm mô tả..."></textarea>
@@ -204,7 +197,7 @@
             <div id="card-list"></div>
         
             <button class="add-card-btn" onclick="addCard()">+ Thêm thẻ</button>
-            <button class="submit-btn">Tạo và ôn luyện</button>
+            <button id="submitBtn" class="submit-btn">Tạo</button>
           </div>
         </div>
       </div>
@@ -217,7 +210,7 @@
   <script src="../assets/js/core/bootstrap.min.js"></script>
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script>
+  <!-- <script>
     let cardCount = 0;
 
     function addCard() {
@@ -258,7 +251,7 @@
     addCard();
     addCard();
     addCard();
-  </script>
+  </script> -->
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -274,7 +267,7 @@
   
   <script src="../assets/js/corporate-ui-dashboard.min.js?v=1.0.0"></script>
   <script src="../assets/js/navbar.js"></script>
-
+  <script src="../assets/js/flashcardset.js"></script>
 </body>
 
 </html>

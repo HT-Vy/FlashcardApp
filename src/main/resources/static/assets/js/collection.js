@@ -2,6 +2,8 @@
 const token = sessionStorage.getItem('token');
 const headers = { 'Authorization': 'Bearer ' + token };
 
+let currentUserId;// để renderTable và onDeleteSet dùng
+
 async function fetchMySets() {
   // Đọc từ /api/auth/me thì trong flashcardSets bạn đã có bộ tự tạo
   const res = await fetch('/api/auth/me', { headers });
@@ -30,7 +32,24 @@ async function fetchAllSets() {
 // hàm render bảng
 function renderTable(sets) {
     const tbody = document.getElementById('collectionTableBody');
-    tbody.innerHTML = sets.map(s => `
+    tbody.innerHTML = sets.map(s => {
+      // 1. Kiểm xem là do chính user tạo không
+    const isMine = s.ownerId === currentUserId;
+
+    // 2. Nút edit (link tới flashcardset.html?setId=…) và nút delete
+    const actions = isMine
+      ? `
+        <!-- Chỉnh sửa -->
+        <a href="./flashcardset.html?setId=${s.id}" class="mx-1" title="Chỉnh sửa">
+          <i class="fas fa-edit text-primary"></i>
+        </a>
+        <!-- Xóa -->
+        <button class="btn btn-link p-0 mx-1" title="Xóa" onclick="onDeleteSet(${s.id})">
+          <i class="fas fa-trash-alt text-danger"></i>
+        </button>
+      `
+      : '';
+      return `
       <tr>
         <td style="padding: 18px">
           <a href="./learn.html?setId=${s.id}" class="text-decoration-none">
@@ -46,12 +65,51 @@ function renderTable(sets) {
             <span>${s.ownerName}</span>
           </div>
         </td>
+        <td class="align-middle">
+          ${actions}
+        </td>
       </tr>
-    `).join('');
+    `;
+    }).join('');
   }
+//Xóa flashcardset
+  async function onDeleteSet(setId) {
+    if (!confirm('Bạn có chắc muốn xóa bộ này không?')) return;
+    try {
+      const res = await fetch(`/api/sets/${setId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('token') }
+      });
+      if (!res.ok) throw new Error('Lỗi ' + res.status);
+      // reload lại bảng
+      const active = document.querySelector('input[name="btnradiotable"]:checked').id;
+      if (active === 'btnradiotable2') {
+        renderTable(await fetchMySets());
+      } else if (active === 'btnradiotable3') {
+        renderTable(await fetchSavedSets());
+      } else {
+        renderTable(await fetchAllSets());
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Xóa không thành công: ' + e.message);
+    }
+  }
+  
 // Gắn event cho 3 radio và khởi chạy ban đầu
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // 0. Lấy info của user
+
+    try {
+      const meRes = await fetch('/api/auth/me', { headers });
+      if (!meRes.ok) throw new Error();
+      const me = await meRes.json();
+      currentUserId = me.id;
+    } catch {
+      alert('Không lấy được thông tin user');
+      return;
+    }
     const rAll   = document.getElementById('btnradiotable1');
     const rMine  = document.getElementById('btnradiotable2');
     const rSaved = document.getElementById('btnradiotable3');
