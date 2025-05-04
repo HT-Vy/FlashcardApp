@@ -66,6 +66,26 @@ public class FlashcardSetController {
     public ResponseEntity<?> searchSets(@RequestParam String keyword) {
         return ResponseEntity.ok(flashcardSetService.searchSets(keyword));
     }
+    // @GetMapping("/api/sets/search")
+    // public ResponseEntity<List<FlashcardSetDTO>> searchSets(@RequestParam String keyword) {
+    //     List<FlashcardSet> sets = flashcardSetService.searchSets(keyword);
+    //     List<FlashcardSetDTO> dtos = sets.stream().map(s -> {
+    //         FlashcardSetDTO dto = new FlashcardSetDTO();
+    //         dto.setId(s.getId());
+    //         dto.setTitle(s.getTitle());
+    //         dto.setDescription(s.getDescription());
+    //         dto.setLastStudiedAt(
+    //             s.getLastStudiedAt()!=null ? s.getLastStudiedAt() : s.getCreatedAt());
+    //         dto.setSavedByCount(s.getSavedByUsers().size());
+    //         dto.setOwnerId(s.getUser().getId());
+    //         dto.setOwnerName(s.getUser().getFullName());
+    //         dto.setOwnerAvatarUrl(s.getUser().getAvatarUrl());
+    //         dto.setFlashcardCount(s.getFlashcards().size());
+    //         return dto;
+    // }).collect(Collectors.toList());
+    // return ResponseEntity.ok(dtos);
+    // }
+
 
     /**
      * Cập nhật bộ flashcard

@@ -96,7 +96,7 @@
             <span class="nav-link-text ms-1">Thư viện của tôi</span>
           </a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link  active" href="../pages/learn.html">
             <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
               <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +116,7 @@
             </div>
             <span class="nav-link-text ms-1">Học</span>
           </a>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a class="nav-link  " href="../pages/flashcardset.html">
             <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
@@ -255,9 +255,9 @@
                   </button>
                 </div>
                 <div class="button-container">
-                  <button class="circle-button not-completed">✗</button>
+                  <!-- <button class="circle-button not-completed">✗</button> -->
                   <span id="card-position" class="text-gray-700 text-base font-weight-bold select-none"> </span>
-                  <button class="circle-button completed">✓</button>
+                  <!-- <button class="circle-button completed">✓</button> -->
 
                 </div>
 
@@ -266,9 +266,10 @@
                   <div id="settings" style="display: none;">
                     <label>Hiển thị:
                       <select id="displayMode" onchange="updateCardDisplay()">
+                        <option value="None">Tất cả</option>
                         <option value="VN">VN</option>
                         <option value="EN">EN</option>
-                        <option value="None">Tất cả</option>
+                        
                       </select>
                     </label>
                     <label>Giọng đọc:
@@ -426,14 +427,15 @@
         const mode = document.getElementById('displayMode').value;
         const w = words[currentIndex];
 
-        if (mode === 'VN') {
-          front.textContent = '?';
+        if (mode === 'None') {
+          front.textContent = w.en;
           back.textContent = w.vn;
+          
         } else if (mode === 'EN') {
           front.textContent = w.en;
           back.textContent = '?';
         } else {
-          front.textContent = w.en;
+          front.textContent = '?';
           back.textContent = w.vn;
         }
 

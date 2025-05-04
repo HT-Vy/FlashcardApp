@@ -2,10 +2,12 @@ package com.htv.flashcard.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.htv.flashcard.DTO.QuizCardDTO;
 import com.htv.flashcard.DTO.QuizEvaluateDTO;
 import com.htv.flashcard.model.Flashcard;
 import com.htv.flashcard.model.FlashcardSet;
@@ -25,10 +27,14 @@ public class QuizService {
      * @param isReview true = review (chỉ thẻ LEARNED), false = test (chỉ thẻ UNLEARNED)
      * @return Danh sách flashcard tương ứng
      */
-    public List<Flashcard> getFlashcardsForQuiz(Long setId, boolean isReview) {
-        Status status = isReview ? Status.LEARNED : Status.UNLEARNED;
-        return flashcardRepo.findByFlashcardSetIdAndStatus(setId, status);
+    public List<QuizCardDTO> getQuizCards(Long setId, boolean isReview) {
+        Status want = isReview ? Status.LEARNED : Status.UNLEARNED;
+        return flashcardRepo.findByFlashcardSetIdAndStatus(setId, want)
+            .stream()
+            .map(f -> new QuizCardDTO(f.getId(), f.getBackContent(), f.getFrontContent()))
+            .collect(Collectors.toList());
     }
+
 /**
      * Đánh giá 1 flashcard và trả về DTO kết quả.
      * @param fc         Flashcard lấy từ DB
@@ -36,35 +42,26 @@ public class QuizService {
      * @param isReview   true nếu review, false nếu test
      * @return QuizEvaluateDTO chứa flashcardId và kết quả đúng/sai
      */
+    // Đánh giá 1 flashcard và cập nhật status ngay
     public QuizEvaluateDTO evaluateFlashcard(Flashcard fc, String userAnswer, boolean isReview) {
-        String correctAnswer = fc.getFrontContent().trim().toLowerCase();
-        String input        = userAnswer.trim().toLowerCase();
-        boolean isCorrect   = correctAnswer.equals(input);
-
-        // Cập nhật trạng thái thẻ
+        boolean isCorrect = fc.getFrontContent().trim().equalsIgnoreCase(userAnswer.trim());
         if (isReview) {
-            if (!isCorrect) {
-                fc.setStatus(Status.UNLEARNED);
-            }
+            if (!isCorrect) fc.setStatus(Status.UNLEARNED);
         } else {
-            if (isCorrect) {
-                fc.setStatus(Status.LEARNED);
-            }
+            if (isCorrect) fc.setStatus(Status.LEARNED);
         }
         flashcardRepo.save(fc);
 
-        //Cập nhật lại thời gian học gần nhất:
+        // Cập nhật lastStudiedAt bộ flashcard set
         FlashcardSet set = fc.getFlashcardSet();
         set.setLastStudiedAt(LocalDateTime.now());
         flashcardSetRepo.save(set);
 
-        // Tạo và trả về DTO kết quả
         QuizEvaluateDTO dto = new QuizEvaluateDTO();
         dto.setFlashcardId(fc.getId());
         dto.setCorrect(isCorrect);
         return dto;
     }
-
     /**
      * Tính % tiến độ học: số thẻ LEARNED trên tổng số thẻ
      */

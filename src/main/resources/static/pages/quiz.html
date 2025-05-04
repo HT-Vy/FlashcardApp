@@ -222,7 +222,7 @@
                 <!-- 1) Chọn chế độ -->
                 <div id="modeScreen">
                   <div class="btn-group">
-                    <input type="radio" id="modePractice" name="mode" value="practice" checked>
+                    <input type="radio" id="modePractice" name="mode" value="review" checked>
                     <label for="modePractice">Ôn tập</label>
                     <input type="radio" id="modeTest" name="mode" value="test">
                     <label for="modeTest">Kiểm tra</label>
@@ -278,52 +278,126 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
-<script>
-  let quizData = [];
-  let currentIndex = 0, score = 0;
-  const modeScreen   = document.getElementById('modeScreen');
-  const quizContent  = document.getElementById('quizContent');
-  const resultScreen = document.getElementById('resultScreen');
-  const definitionEl = document.getElementById('definition');
-  const progressEl   = document.getElementById('progress');
-  const answerInput  = document.getElementById('answerInput');
-  const resultText   = document.getElementById('resultText');
 
-  document.getElementById('startBtn').addEventListener('click', () => {
-    const mode = document.querySelector('input[name="mode"]:checked').value;
-    // Gọi backend tương ứng, trả về JSON [{vi, en},…]
-    fetch(`/api/quiz/${mode}`)
-      .then(r => r.json())
+
+  
+
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="../assets/js/corporate-ui-dashboard.min.js?v=1.0.0"></script>
+  <script src="../assets/js/navbar.js"></script>
+  <!-- <script src="../assets/js/learn.js"></script> -->
+<!-- quiz.html -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+  // 0) Bảo vệ route và lấy setId
+  const token = sessionStorage.getItem('token');
+  if (!token) {
+    window.location.href = 'sign-in.html';
+    // dừng chạy script
+  } 
+  const params = new URLSearchParams(window.location.search);
+  const setId  = params.get('setId');
+  if (!setId) {
+    alert('Không xác định được bộ flashcard');
+    throw new Error('Missing setId');
+  }
+
+  // 1) Khai báo biến chung
+  let quizData = [], currentIndex = 0, score = 0, mode = 'review';
+  const headers     = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+  const modeScreen  = document.getElementById('modeScreen');
+  const quizContent = document.getElementById('quizContent');
+  const resultScreen= document.getElementById('resultScreen');
+  const definitionEl= document.getElementById('definition');
+  const progressEl  = document.getElementById('progress');
+  const answerInput = document.getElementById('answerInput');
+  const resultText  = document.getElementById('resultText');
+  const startBtn    = document.getElementById('startBtn');
+  const nextBtn     = document.getElementById('nextBtn');
+  const restartBtn  = document.getElementById('restartBtn');
+
+  // 2) Khi bấm Bắt đầu
+  startBtn.addEventListener('click', () => {
+    // đọc chế độ từ radio
+    mode = document.querySelector('input[name="mode"]:checked').value; 
+    // fetch danh sách flashcards
+    fetch(`/api/sets/${setId}/quiz/${mode}`, { headers })
+      .then(r => {
+        if (!r.ok) throw new Error(`Không lấy được quiz: ${r.statusText}`);
+        return r.json();
+      })
       .then(data => {
-        quizData = data;
+        // map thẳng về front/back/id
+        quizData = data.map(f => ({
+          id:           f.id,
+          frontContent: f.frontContent,  // đáp án (EN)
+          backContent:  f.backContent    // định nghĩa (VN)
+        }));
+        if (quizData.length === 0) {
+          alert('Chưa có flashcard nào cho chế độ này.');
+          return;
+        }
         currentIndex = 0;
-        score = 0;
-        modeScreen.style.display = 'none';
+        score        = 0;
+        // ẩn màn hình chọn mode, hiện quiz
+        modeScreen.style.display  = 'none';
         renderCard();
         quizContent.style.display = 'block';
       })
-      .catch(console.error);
+      .catch(err => {
+        console.error(err);
+        alert(err.message);
+      });
   });
 
+  // 3) Hàm hiện card hiện tại
   function renderCard() {
     const item = quizData[currentIndex];
-    definitionEl.textContent = item.vi;
+    // hiển thị định nghĩa (backContent)
+    definitionEl.textContent = item.backContent;
+    // tiến độ
     progressEl.textContent   = `${currentIndex+1}/${quizData.length}`;
+    // reset input
     answerInput.value = '';
     answerInput.classList.remove('is-valid','is-invalid');
     answerInput.focus();
   }
 
-  function checkAnswer() {
+  // 4) Khi bấm Tiếp
+  async function checkAnswer() {
+    const item = quizData[currentIndex];
     const user = answerInput.value.trim().toLowerCase();
-    const correct = quizData[currentIndex].en.toLowerCase();
+    const correct = item.frontContent.trim().toLowerCase();
     answerInput.classList.remove('is-valid','is-invalid');
+
+    // đánh dấu đúng/sai
     if (user === correct) {
       answerInput.classList.add('is-valid');
       score++;
     } else {
       answerInput.classList.add('is-invalid');
     }
+
+    // gửi đánh giá liền
+    try {
+      await fetch(
+        `/api/sets/${setId}/quiz/${mode}/evaluate`,
+        {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            flashcardId: item.id,
+            userAnswer:  answerInput.value.trim()
+          })
+        }
+      );
+    } catch(e) {
+      console.error('Lỗi evaluate:', e);
+    }
+
+    // sau 1s, chuyển card kế hoặc hiện kết quả
     setTimeout(() => {
       if (currentIndex === quizData.length - 1) {
         quizContent.style.display = 'none';
@@ -336,25 +410,21 @@
     }, 1000);
   }
 
-  document.getElementById('nextBtn').addEventListener('click', checkAnswer);
+  nextBtn.addEventListener('click', checkAnswer);
   answerInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       e.preventDefault();
       checkAnswer();
     }
   });
-  document.getElementById('restartBtn').addEventListener('click', () => {
-    resultScreen.style.display = 'none';
-    modeScreen.style.display = 'flex';
-  });
-</script>
 
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/corporate-ui-dashboard.min.js?v=1.0.0"></script>
-  <script src="../assets/js/navbar.js"></script>
-  <!-- <script src="../assets/js/learn.js"></script> -->
+  // 5) Khi bấm Lặp lại
+  restartBtn.addEventListener('click', () => {
+    resultScreen.style.display = 'none';
+    modeScreen.style.display   = 'flex';
+  });
+});
+</script>
 </body>
 
 
