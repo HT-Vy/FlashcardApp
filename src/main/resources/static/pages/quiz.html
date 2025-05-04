@@ -23,7 +23,7 @@
   <link id="pagestyle" href="../assets/css/corporate-ui-dashboard.css?v=1.0.0" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <link rel="stylesheet" href="../assets/css/flashcard-style.css">
+  <link rel="stylesheet" href="../assets/css/quiz-style.css">
 
 </head>
 <script>
@@ -159,6 +159,7 @@
         </li>
       </ul>
     </div>
+    
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
@@ -213,104 +214,52 @@
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-4 px-5">
-      <!-- hiển thị flashcard -->
       <div class="row">
-
-        <div class="col-12 col-xl-12 mb-4">
-          <div class="position-relative overflow-hidden">
-            <!-- hiển thị thẻ -->
-            <div class="container">
-              <div>
-                <div class="max-w-4xl mx-auto">
-                  <div class="top-bar flex items-center justify-between">
-                    <h2 id="setTitle" class="text-gray-700 font-semibold text-[16px] leading-[40px]">
-
-                    </h2>
-                    <div class="flex space-x-4 ">
-                      <!-- Bookmark button -->
-                      <button id="bookmarkBtn" aria-label="Bookmark" class="bookmark-btn">
-                        <i class="far fa-bookmark"></i>
-                      </button>
-                    </div>
+        <div class="position-relative overflow-hidden">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+              <div class="quiz-card">
+                <!-- 1) Chọn chế độ -->
+                <div id="modeScreen">
+                  <div class="btn-group">
+                    <input type="radio" id="modePractice" name="mode" value="practice" checked>
+                    <label for="modePractice">Ôn tập</label>
+                    <input type="radio" id="modeTest" name="mode" value="test">
+                    <label for="modeTest">Kiểm tra</label>
                   </div>
-
-
+                  <button id="startBtn" type="button">Bắt đầu</button>
                 </div>
-
-                <div class="flashcard-wrapper">
-
-                  <button onclick="previousWord()" aria-label="Previous"
-                    class="arrow-button flex items-center justify-center w-12 h-12 rounded-full border border-gray-300 text-gray-600 hover:text-gray-800 focus:outline-none">
-                    <i class="fas fa-arrow-left text-lg"></i>
-                  </button>
-                  <div class="card hidden" id="card" onclick="toggleCard()">
-                    <div class="card-inner">
-                      <div class="card-face front" id="front">Word</div>
-                      <div class="card-face back" id="back">?</div>
-                    </div>
+            
+                <!-- 2) Nội dung quiz -->
+                <div id="quizContent">
+                  <div class="quiz-header">
+                    <div class="title">Định nghĩa</div>
+                    <div class="progress" id="progress">0/0</div>
                   </div>
-                  <button onclick="nextWord()" aria-label="Previous"
-                    class="arrow-button flex items-center justify-center w-12 h-12 rounded-full border border-gray-300 text-gray-600 hover:text-gray-800 focus:outline-none">
-                    <i class="fas fa-arrow-right text-lg"></i>
-                  </button>
-                </div>
-                <div class="button-container">
-                  <button class="circle-button not-completed">✗</button>
-                  <span id="card-position" class="text-gray-700 text-base font-weight-bold select-none"> </span>
-                  <button class="circle-button completed">✓</button>
-
-                </div>
-
-                <div>
-                  <span class="settings-icon" onclick="toggleSettings()">⚙</span>
-                  <div id="settings" style="display: none;">
-                    <label>Hiển thị:
-                      <select id="displayMode" onchange="updateCardDisplay()">
-                        <option value="VN">VN</option>
-                        <option value="EN">EN</option>
-                        <option value="None">Tất cả</option>
-                      </select>
-                    </label>
-                    <label>Giọng đọc:
-                      <select id="voiceMode">
-                        <option value="en-US">Anh - Mỹ</option>
-                        <option value="en-GB">Anh - Anh</option>
-                        <option value="None">Không đọc</option>
-                      </select>
-                    </label>
+                  <div class="quiz-body">
+                    <p class="definition" id="definition"></p>
                   </div>
+                  <div class="quiz-answer">
+                    <label for="answerInput">Đáp án của bạn</label>
+                    <input id="answerInput" type="text" autocomplete="off">
+                  </div>
+                  <div class="quiz-footer">
+                    <button id="nextBtn" class="btn-next" type="button">Tiếp</button>
+                  </div>
+                </div>
+            
+                <!-- 3) Màn hình kết quả -->
+                <div id="resultScreen">
+                  <div class="emoji">🎉</div>
+                  <h2 id="resultText">Chúc mừng bạn đã hoàn thành 0/0</h2>
+                  <button id="restartBtn" class="btn-next" type="button">Lặp lại</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        <hr class="my-0">
-        <div class="row">
-          <!-- phần hiển thị ds thẻ -->
-          <div class="col-md-12">
-            <div class="max-w-4xl mx-auto">
-              <table class="vocab-table">
-                <thead>
-                  <tr>
-                    <th>English</th>
-                    <th>Vietnamese</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- JS sẽ fill vào đây -->
-                </tbody>
-              </table>
-            </div>
-
-
-          </div>
-        </div>
-
-
-
-
       </div>
+    </div>
   </main>
 
   <!--   Core JS Files   -->
@@ -329,157 +278,76 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
-  <script>
-    ; (async function () {
-      // 1. Lấy token từ sessionStorage
-      const token = sessionStorage.getItem('token');
-      if (!token) {
-        window.location.href = 'sign-in.html';
-        return;
+<script>
+  let quizData = [];
+  let currentIndex = 0, score = 0;
+  const modeScreen   = document.getElementById('modeScreen');
+  const quizContent  = document.getElementById('quizContent');
+  const resultScreen = document.getElementById('resultScreen');
+  const definitionEl = document.getElementById('definition');
+  const progressEl   = document.getElementById('progress');
+  const answerInput  = document.getElementById('answerInput');
+  const resultText   = document.getElementById('resultText');
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    // Gọi backend tương ứng, trả về JSON [{vi, en},…]
+    fetch(`/api/quiz/${mode}`)
+      .then(r => r.json())
+      .then(data => {
+        quizData = data;
+        currentIndex = 0;
+        score = 0;
+        modeScreen.style.display = 'none';
+        renderCard();
+        quizContent.style.display = 'block';
+      })
+      .catch(console.error);
+  });
+
+  function renderCard() {
+    const item = quizData[currentIndex];
+    definitionEl.textContent = item.vi;
+    progressEl.textContent   = `${currentIndex+1}/${quizData.length}`;
+    answerInput.value = '';
+    answerInput.classList.remove('is-valid','is-invalid');
+    answerInput.focus();
+  }
+
+  function checkAnswer() {
+    const user = answerInput.value.trim().toLowerCase();
+    const correct = quizData[currentIndex].en.toLowerCase();
+    answerInput.classList.remove('is-valid','is-invalid');
+    if (user === correct) {
+      answerInput.classList.add('is-valid');
+      score++;
+    } else {
+      answerInput.classList.add('is-invalid');
+    }
+    setTimeout(() => {
+      if (currentIndex === quizData.length - 1) {
+        quizContent.style.display = 'none';
+        resultText.textContent = `Chúc mừng bạn đã hoàn thành ${score}/${quizData.length}`;
+        resultScreen.style.display = 'flex';
+      } else {
+        currentIndex++;
+        renderCard();
       }
-      const headers = {
-        'Authorization': 'Bearer ' + token,
-        'Accept': 'application/json'
-      };
+    }, 1000);
+  }
 
-      // 2. Lấy setId từ URL
-      const params = new URLSearchParams(window.location.search);
-      const setId = params.get('setId');
-      if (!setId) return alert('Không xác định được bộ flashcard');
-
-      let flashcards = [];
-      try {
-        // 3. Gọi API lấy dữ liệu bộ flashcard
-        const res = await fetch(`/api/sets/${setId}`, { headers });
-        if (res.status === 401) {
-          // nếu token hết hạn hoặc không hợp lệ → chuyển về login
-          sessionStorage.removeItem('token');
-          return window.location.href = 'sign-in.html';
-        }
-        if (!res.ok) throw new Error(res.statusText);
-        const data = await res.json();
-        // bắt đầu thiết lập nút Bookmark
-        const bookmarkBtn = document.getElementById('bookmarkBtn');
-        const icon = bookmarkBtn.querySelector('i');
-
-        // 1. Nếu đây là set của chính user, ẩn hẳn nút
-        if (data.ownedByCurrentUser) {
-          bookmarkBtn.style.display = 'none';
-        } else {
-          // 2. Khởi tạo trạng thái ban đầu nếu đã bookmark
-          if (data.collected) {
-            bookmarkBtn.classList.add('active');
-            icon.classList.replace('far','fas');
-          }
-          // 3. Gán sự kiện toggle
-          bookmarkBtn.addEventListener('click', async () => {
-            bookmarkBtn.disabled = true;
-            try {
-              const resToggle = await fetch(`/api/collections/${setId}`, {
-                method: 'POST',
-                headers: { 'Authorization': 'Bearer ' + token }
-              });
-              if (!resToggle.ok) throw new Error(resToggle.status);
-              const now = bookmarkBtn.classList.toggle('active');
-              icon.classList.toggle('far', !now);
-              icon.classList.toggle('fas', now);
-            } catch (e) {
-              console.error('Toggle bookmark failed', e);
-              alert('Không thể cập nhật bookmark');
-            } finally {
-              bookmarkBtn.disabled = false;
-            }
-          });
-        }
-        // kết thúc thiết lập nút Bookmark
-        // 4. Hiển thị tiêu đề bộ
-        document.querySelector('.top-bar h2').innerText = data.title;  // :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
-
-        flashcards = data.flashcards;
-      } catch (e) {
-        console.error('Lỗi tải dữ liệu bộ flashcard:', e);
-        return alert('Lỗi tải dữ liệu bộ flashcard');
-      }
-
-      // 5. Map thành mảng từ để dùng cho flashcard và table
-      const words = flashcards.map(f => ({
-        en: f.frontContent,
-        vn: f.backContent
-      }));  // :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
-
-      let currentIndex = 0;
-
-      // 6. Build bảng từ vựng
-      const tbody = document.querySelector('.vocab-table tbody');
-      tbody.innerHTML = words.map(w =>
-        `<tr><td>${w.en}</td><td>${w.vn}</td></tr>`
-      ).join('');
-
-      // 7. Các hàm hiển thị và điều khiển flashcard
-      const cardEl = document.getElementById('card');
-      function updateCardDisplay() {
-        // reset về mặt trước
-        cardEl.classList.remove('flipped');
-
-        const front = document.getElementById('front');
-        const back = document.getElementById('back');
-        const mode = document.getElementById('displayMode').value;
-        const w = words[currentIndex];
-
-        if (mode === 'VN') {
-          front.textContent = '?';
-          back.textContent = w.vn;
-        } else if (mode === 'EN') {
-          front.textContent = w.en;
-          back.textContent = '?';
-        } else {
-          front.textContent = w.en;
-          back.textContent = w.vn;
-        }
-
-        document.getElementById('card-position')
-          .textContent = `${currentIndex + 1} / ${words.length}`;
-      }
-
-      function nextWord() {
-        currentIndex = (currentIndex + 1) % words.length;
-        updateCardDisplay(); speakWord();
-      }
-      function previousWord() {
-        currentIndex = (currentIndex - 1 + words.length) % words.length;
-        updateCardDisplay(); speakWord();
-      }
-      function toggleCard() {
-        cardEl.classList.toggle('flipped');
-        speakWord();
-      }
-      function speakWord() {
-        const voice = document.getElementById('voiceMode').value;
-        if (voice === 'None') return;
-        const u = new SpeechSynthesisUtterance(words[currentIndex].en);
-        u.lang = voice;
-        speechSynthesis.speak(u);
-      }
-      function toggleSettings() {
-        const s = document.getElementById('settings');
-        s.style.display = s.style.display === 'none' ? 'block' : 'none';
-      }
-
-      // 8. Gán sự kiện (giữ nguyên selector inline)
-      cardEl.addEventListener('click', toggleCard);
-      document.querySelector('[onclick="nextWord()"]')
-        .addEventListener('click', nextWord);
-      document.querySelector('[onclick="previousWord()"]')
-        .addEventListener('click', previousWord);
-      document.getElementById('displayMode')
-        .addEventListener('change', updateCardDisplay);
-      document.querySelector('.settings-icon')
-        .addEventListener('click', toggleSettings);
-
-      // 9. Chạy khởi tạo
-      updateCardDisplay();
-    })();
-  </script>
+  document.getElementById('nextBtn').addEventListener('click', checkAnswer);
+  answerInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      checkAnswer();
+    }
+  });
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    resultScreen.style.display = 'none';
+    modeScreen.style.display = 'flex';
+  });
+</script>
 
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>

@@ -44,7 +44,7 @@ function renderTable(sets) {
           <i class="fas fa-edit text-primary"></i>
         </a>
         <!-- Xóa -->
-        <button class="btn btn-link p-0 mx-1" title="Xóa" onclick="onDeleteSet(${s.id})">
+        <button class="btn btn-link p-0 mx-1 mt-3" title="Xóa" onclick="onDeleteSet(${s.id})">
           <i class="fas fa-trash-alt text-danger"></i>
         </button>
       `
@@ -66,11 +66,21 @@ function renderTable(sets) {
           </div>
         </td>
         <td class="align-middle">
+          <button class="btn btn-sm btn-outline-warning" onclick="goToPractice(${s.id})" title="Ôn luyện">
+            <i class="fas fa-redo-alt"></i>
+          </button>
+        </td>
+        <td class="align-middle">
           ${actions}
         </td>
       </tr>
     `;
     }).join('');
+  }
+
+  function goToPractice(setId) {
+    // 
+    window.location.href = `quiz.html?setId=${setId}`;
   }
 //Xóa flashcardset
   async function onDeleteSet(setId) {
