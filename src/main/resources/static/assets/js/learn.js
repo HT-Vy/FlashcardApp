@@ -7,6 +7,16 @@
     const params = new URLSearchParams(window.location.search);
     const setId = params.get('setId');
     if (!setId) return alert('Không xác định được bộ flashcard');
+
+    //quiz
+    const quizBtn = document.getElementById('quizBtn');
+    console.log('quizBtn:', quizBtn);
+    if (quizBtn) {
+      quizBtn.addEventListener('click', () => {
+        // Chuyển hướng sang quiz.html
+        window.location.href = `./quiz.html?setId=${setId}`;
+      });
+    }
   
     // Fetch dữ liệu set
     let flashcards = [];
@@ -21,7 +31,7 @@
       return alert('Lỗi tải dữ liệu bộ flashcard');
     }
   
-    // **SỬA Ở ĐÂY**: map đúng trường frontContent/backContent
+    // trường frontContent/backContent
     const words = flashcards.map(f => ({
       en: f.frontContent,
       vn: f.backContent

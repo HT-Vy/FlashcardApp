@@ -97,27 +97,6 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link  active" href="../pages/learn.html">
-            <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
-              <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink">
-                <title>Học</title>
-                <g id="wallet" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                  <g id="credit-card" transform="translate(12.000000, 15.000000)" fill="#FFFFFF">
-                    <path class="color-background"
-                      d="M3,0 C1.343145,0 0,1.343145 0,3 L0,4.5 L24,4.5 L24,3 C24,1.343145 22.6569,0 21,0 L3,0 Z"
-                      id="Path" fill-rule="nonzero"></path>
-                    <path class="color-foreground"
-                      d="M24,7.5 L0,7.5 L0,15 C0,16.6569 1.343145,18 3,18 L21,18 C22.6569,18 24,16.6569 24,15 L24,7.5 Z M3,13.5 C3,12.67155 3.67158,12 4.5,12 L6,12 C6.82842,12 7.5,12.67155 7.5,13.5 C7.5,14.32845 6.82842,15 6,15 L4.5,15 C3.67158,15 3,14.32845 3,13.5 Z M10.5,12 C9.67158,12 9,12.67155 9,13.5 C9,14.32845 9.67158,15 10.5,15 L12,15 C12.82845,15 13.5,14.32845 13.5,13.5 C13.5,12.67155 12.82845,12 12,12 L10.5,12 Z"
-                      id="Shape"></path>
-                  </g>
-                </g>
-              </svg>
-            </div>
-            <span class="nav-link-text ms-1">Học</span>
-          </a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link  " href="../pages/flashcardset.html">
             <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
               <svg width="30px" height="30px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -159,7 +138,7 @@
         </li>
       </ul>
     </div>
-    
+
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
@@ -223,13 +202,13 @@
                 <div id="modeScreen">
                   <div class="btn-group">
                     <input type="radio" id="modePractice" name="mode" value="review" checked>
-                    <label for="modePractice">Ôn tập</label>
+                    <label class="review" for="modePractice">Ôn tập</label>
                     <input type="radio" id="modeTest" name="mode" value="test">
-                    <label for="modeTest">Kiểm tra</label>
+                    <label class="test" for="modeTest">Kiểm tra</label>
                   </div>
                   <button id="startBtn" type="button">Bắt đầu</button>
                 </div>
-            
+
                 <!-- 2) Nội dung quiz -->
                 <div id="quizContent">
                   <div class="quiz-header">
@@ -247,7 +226,7 @@
                     <button id="nextBtn" class="btn-next" type="button">Tiếp</button>
                   </div>
                 </div>
-            
+
                 <!-- 3) Màn hình kết quả -->
                 <div id="resultScreen">
                   <div class="emoji">🎉</div>
@@ -278,153 +257,149 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
-
-
-  
-
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/corporate-ui-dashboard.min.js?v=1.0.0"></script>
   <script src="../assets/js/navbar.js"></script>
   <!-- <script src="../assets/js/learn.js"></script> -->
-<!-- quiz.html -->
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-  // 0) Bảo vệ route và lấy setId
-  const token = sessionStorage.getItem('token');
-  if (!token) {
-    window.location.href = 'sign-in.html';
-    // dừng chạy script
-  } 
-  const params = new URLSearchParams(window.location.search);
-  const setId  = params.get('setId');
-  if (!setId) {
-    alert('Không xác định được bộ flashcard');
-    throw new Error('Missing setId');
-  }
-
-  // 1) Khai báo biến chung
-  let quizData = [], currentIndex = 0, score = 0, mode = 'review';
-  const headers     = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
-  const modeScreen  = document.getElementById('modeScreen');
-  const quizContent = document.getElementById('quizContent');
-  const resultScreen= document.getElementById('resultScreen');
-  const definitionEl= document.getElementById('definition');
-  const progressEl  = document.getElementById('progress');
-  const answerInput = document.getElementById('answerInput');
-  const resultText  = document.getElementById('resultText');
-  const startBtn    = document.getElementById('startBtn');
-  const nextBtn     = document.getElementById('nextBtn');
-  const restartBtn  = document.getElementById('restartBtn');
-
-  // 2) Khi bấm Bắt đầu
-  startBtn.addEventListener('click', () => {
-    // đọc chế độ từ radio
-    mode = document.querySelector('input[name="mode"]:checked').value; 
-    // fetch danh sách flashcards
-    fetch(`/api/sets/${setId}/quiz/${mode}`, { headers })
-      .then(r => {
-        if (!r.ok) throw new Error(`Không lấy được quiz: ${r.statusText}`);
-        return r.json();
-      })
-      .then(data => {
-        // map thẳng về front/back/id
-        quizData = data.map(f => ({
-          id:           f.id,
-          frontContent: f.frontContent,  // đáp án (EN)
-          backContent:  f.backContent    // định nghĩa (VN)
-        }));
-        if (quizData.length === 0) {
-          alert('Chưa có flashcard nào cho chế độ này.');
-          return;
-        }
-        currentIndex = 0;
-        score        = 0;
-        // ẩn màn hình chọn mode, hiện quiz
-        modeScreen.style.display  = 'none';
-        renderCard();
-        quizContent.style.display = 'block';
-      })
-      .catch(err => {
-        console.error(err);
-        alert(err.message);
-      });
-  });
-
-  // 3) Hàm hiện card hiện tại
-  function renderCard() {
-    const item = quizData[currentIndex];
-    // hiển thị định nghĩa (backContent)
-    definitionEl.textContent = item.backContent;
-    // tiến độ
-    progressEl.textContent   = `${currentIndex+1}/${quizData.length}`;
-    // reset input
-    answerInput.value = '';
-    answerInput.classList.remove('is-valid','is-invalid');
-    answerInput.focus();
-  }
-
-  // 4) Khi bấm Tiếp
-  async function checkAnswer() {
-    const item = quizData[currentIndex];
-    const user = answerInput.value.trim().toLowerCase();
-    const correct = item.frontContent.trim().toLowerCase();
-    answerInput.classList.remove('is-valid','is-invalid');
-
-    // đánh dấu đúng/sai
-    if (user === correct) {
-      answerInput.classList.add('is-valid');
-      score++;
-    } else {
-      answerInput.classList.add('is-invalid');
-    }
-
-    // gửi đánh giá liền
-    try {
-      await fetch(
-        `/api/sets/${setId}/quiz/${mode}/evaluate`,
-        {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            flashcardId: item.id,
-            userAnswer:  answerInput.value.trim()
-          })
-        }
-      );
-    } catch(e) {
-      console.error('Lỗi evaluate:', e);
-    }
-
-    // sau 1s, chuyển card kế hoặc hiện kết quả
-    setTimeout(() => {
-      if (currentIndex === quizData.length - 1) {
-        quizContent.style.display = 'none';
-        resultText.textContent = `Chúc mừng bạn đã hoàn thành ${score}/${quizData.length}`;
-        resultScreen.style.display = 'flex';
-      } else {
-        currentIndex++;
-        renderCard();
+  <!-- quiz.html -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 0) Bảo vệ route và lấy setId
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        window.location.href = 'sign-in.html';
+        // dừng chạy script
       }
-    }, 1000);
-  }
+      const params = new URLSearchParams(window.location.search);
+      const setId = params.get('setId');
+      if (!setId) {
+        alert('Không xác định được bộ flashcard');
+        throw new Error('Missing setId');
+      }
 
-  nextBtn.addEventListener('click', checkAnswer);
-  answerInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      checkAnswer();
-    }
-  });
+      // 1) Khai báo biến chung
+      let quizData = [], currentIndex = 0, score = 0, mode = 'review';
+      const headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+      const modeScreen = document.getElementById('modeScreen');
+      const quizContent = document.getElementById('quizContent');
+      const resultScreen = document.getElementById('resultScreen');
+      const definitionEl = document.getElementById('definition');
+      const progressEl = document.getElementById('progress');
+      const answerInput = document.getElementById('answerInput');
+      const resultText = document.getElementById('resultText');
+      const startBtn = document.getElementById('startBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const restartBtn = document.getElementById('restartBtn');
 
-  // 5) Khi bấm Lặp lại
-  restartBtn.addEventListener('click', () => {
-    resultScreen.style.display = 'none';
-    modeScreen.style.display   = 'flex';
-  });
-});
-</script>
+      // 2) Khi bấm Bắt đầu
+      startBtn.addEventListener('click', () => {
+        // đọc chế độ từ radio
+        mode = document.querySelector('input[name="mode"]:checked').value;
+        // fetch danh sách flashcards
+        fetch(`/api/sets/${setId}/quiz/${mode}`, { headers })
+          .then(r => {
+            if (!r.ok) throw new Error(`Không lấy được quiz: ${r.statusText}`);
+            return r.json();
+          })
+          .then(data => {
+            // map thẳng về front/back/id
+            quizData = data.map(f => ({
+              id: f.id,
+              frontContent: f.frontContent,  // đáp án (EN)
+              backContent: f.backContent    // định nghĩa (VN)
+            }));
+            if (quizData.length === 0) {
+              alert('Chưa có flashcard nào cho chế độ này.');
+              return;
+            }
+            currentIndex = 0;
+            score = 0;
+            // ẩn màn hình chọn mode, hiện quiz
+            modeScreen.style.display = 'none';
+            renderCard();
+            quizContent.style.display = 'block';
+          })
+          .catch(err => {
+            console.error(err);
+            alert(err.message);
+          });
+      });
+
+      // 3) Hàm hiện card hiện tại
+      function renderCard() {
+        const item = quizData[currentIndex];
+        // hiển thị định nghĩa (backContent)
+        definitionEl.textContent = item.backContent;
+        // tiến độ
+        progressEl.textContent = `${currentIndex + 1}/${quizData.length}`;
+        // reset input
+        answerInput.value = '';
+        answerInput.classList.remove('is-valid', 'is-invalid');
+        answerInput.focus();
+      }
+
+      // 4) Khi bấm Tiếp
+      async function checkAnswer() {
+        const item = quizData[currentIndex];
+        const user = answerInput.value.trim().toLowerCase();
+        const correct = item.frontContent.trim().toLowerCase();
+        answerInput.classList.remove('is-valid', 'is-invalid');
+
+        // đánh dấu đúng/sai
+        if (user === correct) {
+          answerInput.classList.add('is-valid');
+          score++;
+        } else {
+          answerInput.classList.add('is-invalid');
+        }
+
+        // gửi đánh giá liền
+        try {
+          await fetch(
+            `/api/sets/${setId}/quiz/${mode}/evaluate`,
+            {
+              method: 'POST',
+              headers,
+              body: JSON.stringify({
+                flashcardId: item.id,
+                userAnswer: answerInput.value.trim()
+              })
+            }
+          );
+        } catch (e) {
+          console.error('Lỗi evaluate:', e);
+        }
+
+        // sau 1s, chuyển card kế hoặc hiện kết quả
+        setTimeout(() => {
+          if (currentIndex === quizData.length - 1) {
+            quizContent.style.display = 'none';
+            resultText.textContent = `Chúc mừng bạn đã hoàn thành ${score}/${quizData.length}`;
+            resultScreen.style.display = 'flex';
+          } else {
+            currentIndex++;
+            renderCard();
+          }
+        }, 1000);
+      }
+
+      nextBtn.addEventListener('click', checkAnswer);
+      answerInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          checkAnswer();
+        }
+      });
+
+      // 5) Khi bấm Lặp lại
+      restartBtn.addEventListener('click', () => {
+        resultScreen.style.display = 'none';
+        modeScreen.style.display = 'flex';
+      });
+    });
+  </script>
 </body>
 
 

@@ -1,29 +1,29 @@
 // src/main/resources/static/assets/js/dashboard.js
 // Dynamic rendering of Dashboard while preserving existing CSS styling
 
-(async function(){
-    const token = sessionStorage.getItem('token');
-    if (!token) {
-      window.location.href = 'sign-in.html';
-      return;
-    }
-    const headers = { 'Authorization': 'Bearer ' + token };
-  
-    // 1) Greeting
-    try {
-      const meRes = await fetch('/api/dashboard/me', { headers });
-      const name = await meRes.text();
-      document.getElementById('greeting').innerText = 'Xin Chào, ' + name;
-    } catch (err) {
-      console.error('Error fetching greeting:', err);
-    }
-  
-    // 2) Recent study cards
-    try {
-      const recentRes = await fetch('/api/dashboard/recent', { headers });
-      const recentSets = await recentRes.json();
-      const recentRow = document.getElementById('recentSetsRow');
-      recentRow.innerHTML = recentSets.map(s => `
+(async function () {
+  const token = sessionStorage.getItem('token');
+  if (!token) {
+    window.location.href = 'sign-in.html';
+    return;
+  }
+  const headers = { 'Authorization': 'Bearer ' + token };
+
+  // 1) Greeting
+  try {
+    const meRes = await fetch('/api/dashboard/me', { headers });
+    const name = await meRes.text();
+    document.getElementById('greeting').innerText = 'Xin Chào, ' + name;
+  } catch (err) {
+    console.error('Error fetching greeting:', err);
+  }
+
+  // 2) Recent study cards
+  try {
+    const recentRes = await fetch('/api/dashboard/recent', { headers });
+    const recentSets = await recentRes.json();
+    const recentRow = document.getElementById('recentSetsRow');
+    recentRow.innerHTML = recentSets.map(s => `
         <div class="col-xl-3 col-sm-6 mb-xl-0">
           <div class="card border shadow-xs mb-4">
             <a href="./learn.html?setId=${s.id}" style="text-decoration:none;">
@@ -56,28 +56,28 @@
           </div>
         </div>
       `).join('');
-    } catch (err) {
-      console.error('Error fetching recent sets:', err);
-    }
-  
-    // 3) Top popular table
-    try {
-      const popRes = await fetch('/api/dashboard/popular', { headers });
-      const popular = await popRes.json();
-      const tbody = document.getElementById('popularTbody');
+  } catch (err) {
+    console.error('Error fetching recent sets:', err);
+  }
 
-      tbody.innerHTML = popular.map(s => {
-        // 1. Thiết lập avatarUrl với fallback
-        let avatarUrl = '../assets/img/avatar.png';     // đường dẫn mặc định
-        if (s.ownerAvatarUrl) {
-          if (s.ownerAvatarUrl.startsWith('http')) {
-            avatarUrl = s.ownerAvatarUrl;
-          } else {
-            avatarUrl = window.location.origin + s.ownerAvatarUrl;
-          }
+  // 3) Top popular table
+  try {
+    const popRes = await fetch('/api/dashboard/popular', { headers });
+    const popular = await popRes.json();
+    const tbody = document.getElementById('popularTbody');
+
+    tbody.innerHTML = popular.map(s => {
+      // 1. Thiết lập avatarUrl với fallback
+      let avatarUrl = '../assets/img/avatar.png';     // đường dẫn mặc định
+      if (s.ownerAvatarUrl) {
+        if (s.ownerAvatarUrl.startsWith('http')) {
+          avatarUrl = s.ownerAvatarUrl;
+        } else {
+          avatarUrl = window.location.origin + s.ownerAvatarUrl;
         }
+      }
 
-        return `
+      return `
           <tr>
             <td style="padding: 18px">
               <a href="./learn.html?setId=${s.id}" style="text-decoration:none;">
@@ -110,17 +110,17 @@
             </td>
           </tr>
         `;
-      }).join('');
-    } catch (err) {
-      console.error('Error fetching popular sets:', err);
-    }
+    }).join('');
+  } catch (err) {
+    console.error('Error fetching popular sets:', err);
+  }
 
-    // 4) Search bộ flashcardset
-    const searchInput   = document.getElementById('searchInput');
-    const recentRow     = document.getElementById('recentSetsRow');
+  // 4) Search bộ flashcardset
+  const searchInput = document.getElementById('searchInput');
+  const recentRow = document.getElementById('recentSetsRow');
 
-    function renderSetCard(s) {
-      return `
+  function renderSetCard(s) {
+    return `
       <div class="col-xl-3 col-sm-6 mb-xl-0">
           <div class="card border shadow-xs mb-4">
             <a href="./learn.html?setId=${s.id}" style="text-decoration:none;">
@@ -149,47 +149,46 @@
           </div>
         </div>
         `;
-    }
+  }
 
-    async function doSearch(keyword) {
+  async function doSearch(keyword) {
+    try {
+      const q = encodeURIComponent(keyword);
+      const res = await fetch(`/api/sets/search?keyword=${q}`, { headers });
+      if (!res.ok) throw new Error(res.statusText);
+      const list = await res.json();
+      recentRow.innerHTML = list.length
+        ? list.map(renderSetCard).join('')
+        : `<p class="text-center w-100">Không tìm thấy kết quả nào.</p>`;
+    } catch (e) {
+      console.error('Search error:', e);
+    }
+  }
+
+  // nếu input trống thì load lại recent sets (đang fetch tại bước 2)
+  let debounce;
+  searchInput.addEventListener('input', e => {
+    clearTimeout(debounce);
+    debounce = setTimeout(() => {
+      const kw = e.target.value.trim();
+      if (kw) doSearch(kw);
+      else document.getElementById('recentSetsRow').dispatchEvent(new Event('refreshRecent'));
+    }, 300);
+  });
+
+  // custom event để reload recent (tái sử dụng code ở bước 2)
+  recentRow.addEventListener('refreshRecent', () => {
+    // gọi lại phần “Recent study cards”
+    (async function () {
       try {
-        const q = encodeURIComponent(keyword);
-        const res = await fetch(`/api/sets/search?keyword=${q}`, { headers });
-        if (!res.ok) throw new Error(res.statusText);
-        const list = await res.json();
-        recentRow.innerHTML = list.length
-          ? list.map(renderSetCard).join('')
-          : `<p class="text-center w-100">Không tìm thấy kết quả nào.</p>`;
-      } catch (e) {
-        console.error('Search error:', e);
+        const recentRes = await fetch('/api/dashboard/recent', { headers });
+        const recentSets = await recentRes.json();
+        recentRow.innerHTML = recentSets.map(renderSetCard).join('');
+      } catch (err) {
+        console.error('Error reloading recent sets:', err);
       }
-    }
-
-    // nếu input trống thì load lại recent sets (đang fetch tại bước 2)
-    let debounce;
-    searchInput.addEventListener('input', e => {
-      clearTimeout(debounce);
-      debounce = setTimeout(() => {
-        const kw = e.target.value.trim();
-        if (kw) doSearch(kw);
-        else document.getElementById('recentSetsRow').dispatchEvent(new Event('refreshRecent'));
-      }, 300);
-    });
-
-    // custom event để reload recent (tái sử dụng code ở bước 2)
-    recentRow.addEventListener('refreshRecent', () => {
-      // gọi lại phần “Recent study cards”
-      (async function(){
-        try {
-          const recentRes = await fetch('/api/dashboard/recent', { headers });
-          const recentSets = await recentRes.json();
-          recentRow.innerHTML = recentSets.map(renderSetCard).join('');
-        } catch (err) {
-          console.error('Error reloading recent sets:', err);
-        }
-      })();
-    });
+    })();
+  });
 
 
-  })();
-  
+})();

@@ -31,25 +31,30 @@ async function fetchAllSets() {
 
 // hàm render bảng
 function renderTable(sets) {
-    const tbody = document.getElementById('collectionTableBody');
-    tbody.innerHTML = sets.map(s => {
-      // 1. Kiểm xem là do chính user tạo không
+  const tbody = document.getElementById('collectionTableBody');
+  tbody.innerHTML = sets.map(s => {
+    // 1. Kiểm xem là do chính user tạo không
     const isMine = s.ownerId === currentUserId;
 
     // 2. Nút edit (link tới flashcardset.html?setId=…) và nút delete
     const actions = isMine
       ? `
+      
         <!-- Chỉnh sửa -->
-        <a href="./flashcardset.html?setId=${s.id}" class="mx-1" title="Chỉnh sửa">
-          <i class="fas fa-edit text-primary"></i>
-        </a>
+        <td class="align-middle">
+          <a href="./flashcardset.html?setId=${s.id}" class="mx-1" title="Chỉnh sửa">
+            <i class="fas fa-edit text-primary"></i>
+          </a>
+        </td>
         <!-- Xóa -->
-        <button class="btn btn-link p-0 mx-1 mt-3" title="Xóa" onclick="onDeleteSet(${s.id})">
-          <i class="fas fa-trash-alt text-danger"></i>
-        </button>
+        <td class="align-middle">
+          <button class="btn btn-link p-0 mx-1 mt-3" title="Xóa" onclick="onDeleteSet(${s.id})">
+            <i class="fas fa-trash-alt text-danger"></i>
+          </button>
+        </td>
       `
       : '';
-      return `
+    return `
       <tr>
         <td style="padding: 18px">
           <a href="./learn.html?setId=${s.id}" class="text-decoration-none">
@@ -66,94 +71,87 @@ function renderTable(sets) {
           </div>
         </td>
         <td class="align-middle">
-          <button class="btn btn-sm btn-outline-warning" onclick="goToPractice(${s.id})" title="Ôn luyện">
-            <i class="fas fa-redo-alt"></i>
-          </button>
+          <a class="mx-1" href="./quiz.html?setId=${s.id}" title="Ôn luyện">
+            <i class="fas fa-solid fa-medal fa-xl" style="color: #65e6d1;"></i>
+          </a>
         </td>
-        <td class="align-middle">
           ${actions}
-        </td>
       </tr>
     `;
-    }).join('');
-  }
+  }).join('');
+}
 
-  function goToPractice(setId) {
-    // 
-    window.location.href = `quiz.html?setId=${setId}`;
-  }
 //Xóa flashcardset
-  async function onDeleteSet(setId) {
-    if (!confirm('Bạn có chắc muốn xóa bộ này không?')) return;
-    try {
-      const res = await fetch(`/api/sets/${setId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('token') }
-      });
-      if (!res.ok) throw new Error('Lỗi ' + res.status);
-      // reload lại bảng
-      const active = document.querySelector('input[name="btnradiotable"]:checked').id;
-      if (active === 'btnradiotable2') {
-        renderTable(await fetchMySets());
-      } else if (active === 'btnradiotable3') {
-        renderTable(await fetchSavedSets());
-      } else {
-        renderTable(await fetchAllSets());
-      }
-    } catch (e) {
-      console.error(e);
-      alert('Xóa không thành công: ' + e.message);
+async function onDeleteSet(setId) {
+  if (!confirm('Bạn có chắc muốn xóa bộ này không?')) return;
+  try {
+    const res = await fetch(`/api/sets/${setId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('token') }
+    });
+    if (!res.ok) throw new Error('Lỗi ' + res.status);
+    // reload lại bảng
+    const active = document.querySelector('input[name="btnradiotable"]:checked').id;
+    if (active === 'btnradiotable2') {
+      renderTable(await fetchMySets());
+    } else if (active === 'btnradiotable3') {
+      renderTable(await fetchSavedSets());
+    } else {
+      renderTable(await fetchAllSets());
     }
+  } catch (e) {
+    console.error(e);
+    alert('Xóa không thành công: ' + e.message);
   }
-  
+}
+
 // Gắn event cho 3 radio và khởi chạy ban đầu
 
 document.addEventListener('DOMContentLoaded', async () => {
   // 0. Lấy info của user
 
+  try {
+    const meRes = await fetch('/api/auth/me', { headers });
+    if (!meRes.ok) throw new Error();
+    const me = await meRes.json();
+    currentUserId = me.id;
+  } catch {
+    alert('Không lấy được thông tin user');
+    return;
+  }
+  const rAll = document.getElementById('btnradiotable1');
+  const rMine = document.getElementById('btnradiotable2');
+  const rSaved = document.getElementById('btnradiotable3');
+
+  // Helper để set loading state
+  async function loadAndRender(loader) {
     try {
-      const meRes = await fetch('/api/auth/me', { headers });
-      if (!meRes.ok) throw new Error();
-      const me = await meRes.json();
-      currentUserId = me.id;
-    } catch {
-      alert('Không lấy được thông tin user');
-      return;
+      const sets = await loader();
+      renderTable(sets);
+    } catch (e) {
+      console.error(e);
+      alert(e.message);
     }
-    const rAll   = document.getElementById('btnradiotable1');
-    const rMine  = document.getElementById('btnradiotable2');
-    const rSaved = document.getElementById('btnradiotable3');
-  
-    // Helper để set loading state
-    async function loadAndRender(loader) {
-      try {
-        const sets = await loader();
-        renderTable(sets);
-      } catch (e) {
-        console.error(e);
-        alert(e.message);
-      }
-    }
-  
-    // Khi click Tất cả
-    rAll.addEventListener('change', () => {
-      if (!rAll.checked) return;
-      loadAndRender(fetchAllSets);
-    });
-  
-    // Khi click Của tôi
-    rMine.addEventListener('change', () => {
-      if (!rMine.checked) return;
-      loadAndRender(fetchMySets);
-    });
-  
-    // Khi click Đã lưu
-    rSaved.addEventListener('change', () => {
-      if (!rSaved.checked) return;
-      loadAndRender(fetchSavedSets);
-    });
-  
-    // Ban đầu load Tất cả
+  }
+
+  // Khi click Tất cả
+  rAll.addEventListener('change', () => {
+    if (!rAll.checked) return;
     loadAndRender(fetchAllSets);
   });
-  
+
+  // Khi click Của tôi
+  rMine.addEventListener('change', () => {
+    if (!rMine.checked) return;
+    loadAndRender(fetchMySets);
+  });
+
+  // Khi click Đã lưu
+  rSaved.addEventListener('change', () => {
+    if (!rSaved.checked) return;
+    loadAndRender(fetchSavedSets);
+  });
+
+  // Ban đầu load Tất cả
+  loadAndRender(fetchAllSets);
+});
