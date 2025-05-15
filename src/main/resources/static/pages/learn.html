@@ -17,8 +17,9 @@
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/349ee9c857.js" crossorigin="anonymous"></script>
+  <!-- <script src="https://kit.fontawesome.com/349ee9c857.js" crossorigin="anonymous"></script> -->
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p+..." crossorigin="anonymous"/>
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/corporate-ui-dashboard.css?v=1.0.0" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
@@ -32,7 +33,15 @@
     window.location.href = 'sign-in.html';
   }
 </script>
-<style></style>
+<style>
+  .rate-star {
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  .rate-star.far { color: #ccc; }
+  .rate-star.fas { color: #ffc107; }
+
+</style>
 
 <body class="g-sidenav-show  bg-gray-100">
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 bg-slate-900 fixed-start " id="sidenav-main">
@@ -204,7 +213,7 @@
               <a href="./profile.html" class="nav-link text-body p-0">
                 <img id="navbarAvatar" src="../assets/img/avatar.png" class="avatar avatar-sm" alt="avatar" />
               </a>
-            
+
             </li>
           </ul>
         </div>
@@ -221,26 +230,31 @@
             <div class="container">
               <div>
                 <div class="max-w-4xl mx-auto">
-                  <div class="top-bar flex items-center justify-between">
+                  <div class="top-bar d-flex align-items-center justify-content-between">
                     <h2 id="setTitle" class="text-gray-700 font-semibold text-[16px] leading-[40px]">
-
                     </h2>
-                    <div class="flex flex-row space-x-4 ">
-                      <!-- Bookmark button -->
-                      <button class="btn mx-1 d-none" id="quizBtn" title="Ôn luyện">
-                        <i class="fas fa-solid fa-medal fa-2xl" style="color: #65e6d1;"></i>
-                      </button>
+                    <div class="d-flex align-items-center gap-3">
                       <!-- Star rating -->
-                      <div id="ratingWrapper" class="flex items-center space-x-1">
-                        <!-- 5 icon star, mặc định outline -->
-                        <i class="far fa-star rate-star cursor-pointer" data-score="1"></i>
-                        <i class="far fa-star rate-star cursor-pointer" data-score="2"></i>
-                        <i class="far fa-star rate-star cursor-pointer" data-score="3"></i>
-                        <i class="far fa-star rate-star cursor-pointer" data-score="4"></i>
-                        <i class="far fa-star rate-star cursor-pointer" data-score="5"></i>
-                        <!-- Hiển thị điểm trung bình -->
-                        <span id="avgScore" class="ml-2 text-sm text-gray-600"></span>
+                      <!-- CHO TÁC GIẢ: chỉ 1 sao + avg score -->
+                      <div id="authorRating" class="d-flex d-none align-items-center">
+                        <span id="avgScoreAuthor">(0.0)</span>
+                        <i class="fas fa-star text-warning me-1" style="font-size: 1.5rem"></i>
                       </div>
+                      <!-- CHO NGƯỜI KHÁC: 5 sao interactive + avg score -->
+                      <div id="userRating" class="d-flex d-none align-items-center">
+                        <!-- 5 ngôi sao để hover/click -->
+                        <i class="rate-star far fa-star" data-score="1"></i>
+                        <i class="rate-star far fa-star" data-score="2"></i>
+                        <i class="rate-star far fa-star" data-score="3"></i>
+                        <i class="rate-star far fa-star" data-score="4"></i>
+                        <i class="rate-star far fa-star" data-score="5"></i>
+                        <span class="ms-2" id="avgScoreUser">(0.0)</span>
+                        <i class="fas fa-star text-warning me-1" style="font-size: 1.5rem"></i>
+                      </div>
+                      <!-- Ôn luyện button -->
+                      <a class="mx-1 d-none text-decoration-none text-primary fw-semibold" id="quizBtn" href="#" title="Ôn luyện">
+                        <i class="fas fa-solid fa-medal fa-xl" style="color: #65e6d1;"></i>
+                      </a>
                       <button id="bookmarkBtn" aria-label="Bookmark" class="bookmark-btn">
                         <i class="far fa-bookmark"></i>
                       </button>
@@ -373,65 +387,56 @@
         }
         if (!res.ok) throw new Error(res.statusText);
         const data = await res.json();
+
         // —————— RATING ——————
-        // 3.1. Lấy average rating
-        const avg = await fetch(`/api/sets/${setId}/rating/average`, { headers })
+        const authorRating = document.getElementById('authorRating');
+        const userRating = document.getElementById('userRating');
+        const avgAEl = document.getElementById('avgScoreAuthor');
+        const avgUEl = document.getElementById('avgScoreUser');
+        const stars = document.querySelectorAll('#userRating .rate-star');
+
+        // 1. Lấy avg rating
+        let avg = await fetch(`/api/sets/${setId}/rating/average`, { headers })
           .then(r => r.json());
 
-        // 3.2. Hiển thị avg ra span
-        document.getElementById('avgScore').innerText = `(${avg.toFixed(1)})`;
-
-        // 3.3. Lấy stars
-        const stars = document.querySelectorAll('#ratingWrapper .rate-star');
-
-        // 3.4. Nếu là author (data.ownedByCurrentUser) thì disable
+        // 2. Nếu là tác giả
         if (data.ownedByCurrentUser) {
-          stars.forEach(s => s.classList.add('opacity-50', 'pointer-events-none'));
-        } else {
-          // 3.5. Gán sự kiện hover, click
-          stars.forEach(star => {
-            const score = +star.dataset.score;
-            star.addEventListener('mouseover', () => {
-              stars.forEach(s => {
-                const v = +s.dataset.score;
-                s.classList.toggle('fas', v <= score);
-                s.classList.toggle('far', v > score);
-              });
+          authorRating.classList.remove('d-none');
+          avgAEl.innerText = `(${avg.toFixed(1)})`;
+        }
+        // 3. Nếu là người khác
+        else {
+          userRating.classList.remove('d-none');
+          avgUEl.innerText = `(${avg.toFixed(1)})`;
+
+          // Hàm render sao vàng/xám theo giá trị v
+          function renderStars(v) {
+            stars.forEach(s => {
+              const sc = +s.dataset.score;
+              if (sc <= v) s.classList.add('fas'), s.classList.remove('far');
+              else s.classList.add('far'), s.classList.remove('fas');
             });
-            star.addEventListener('mouseout', () => {
-              stars.forEach(s => {
-                const v = +s.dataset.score;
-                s.classList.toggle('fas', v <= avg);
-                s.classList.toggle('far', v > avg);
-              });
-            });
-            star.addEventListener('click', async () => {
-              try{
-                // gửi rating
-                const resR = await fetch(`/api/sets/${setId}/rating?score=${score}`, {
-                  method: 'POST', headers
-                });
-                if (!resR.ok) return alert('Đánh giá thất bại');
-                // cập nhật avg mới
-                const newAvg = await fetch(`/api/sets/${setId}/rating/average`, { headers })
-                  .then(r => r.json());
-                document.getElementById('avgScore').innerText = `(${newAvg.toFixed(1)})`;
-                stars.forEach(s => {
-                  const v = +s.dataset.score;
-                  s.classList.toggle('fas', v <= newAvg);
-                  s.classList.toggle('far', v > newAvg);
-                });
-              }catch(err) {
-                console.error('Đánh giá thất bại', err);
-                alert('Đánh giá thất bại');
-              }             
-            });
-          });
-          // 3.6. Khởi tạo hiển thị sao theo avg ban đầu
+          }
+          // Khởi tạo
+          renderStars(Math.round(avg));
+
+          // Gán sự kiện hover/click
           stars.forEach(s => {
-            const v = +s.dataset.score;
-            s.classList.toggle('fas', v <= avg);
-            s.classList.toggle('far', v > avg);
+            const sc = +s.dataset.score;
+            s.addEventListener('mouseover', () => renderStars(sc));
+            s.addEventListener('mouseout', () => renderStars(Math.round(avg)));
+            s.addEventListener('click', async () => {
+              // gửi rating
+              const resR = await fetch(`/api/sets/${setId}/rating?score=${sc}`, {
+                method: 'POST', headers
+              });
+              if (!resR.ok) return alert('Đánh giá thất bại');
+              // cập nhật avg mới
+              avg = await fetch(`/api/sets/${setId}/rating/average`, { headers })
+                .then(r => r.json());
+              avgUEl.innerText = `(${avg.toFixed(1)})`;
+              renderStars(Math.round(avg));
+            });
           });
         }
         // —————— Kết thúc RATING ——————
