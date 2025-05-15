@@ -229,12 +229,23 @@
                     <div class="flex flex-row space-x-4 ">
                       <!-- Bookmark button -->
                       <button class="btn mx-1 d-none" id="quizBtn" title="Ôn luyện">
-                        <i class="fas fa-solid fa-medal fa-xl" style="color: #65e6d1;"></i>
+                        <i class="fas fa-solid fa-medal fa-2xl" style="color: #65e6d1;"></i>
                       </button>
+                      <!-- Star rating -->
+                      <div id="ratingWrapper" class="flex items-center space-x-1">
+                        <!-- 5 icon star, mặc định outline -->
+                        <i class="far fa-star rate-star cursor-pointer" data-score="1"></i>
+                        <i class="far fa-star rate-star cursor-pointer" data-score="2"></i>
+                        <i class="far fa-star rate-star cursor-pointer" data-score="3"></i>
+                        <i class="far fa-star rate-star cursor-pointer" data-score="4"></i>
+                        <i class="far fa-star rate-star cursor-pointer" data-score="5"></i>
+                        <!-- Hiển thị điểm trung bình -->
+                        <span id="avgScore" class="ml-2 text-sm text-gray-600"></span>
+                      </div>
                       <button id="bookmarkBtn" aria-label="Bookmark" class="bookmark-btn">
                         <i class="far fa-bookmark"></i>
                       </button>
-                      
+
                     </div>
                   </div>
 
@@ -363,6 +374,71 @@
         }
         if (!res.ok) throw new Error(res.statusText);
         const data = await res.json();
+        // —————— RATING ——————
+        // 3.1. Lấy average rating
+        const avg = await fetch(`/api/sets/${setId}/rating/average`, { headers })
+          .then(r => r.json());
+
+        // 3.2. Hiển thị avg ra span
+        document.getElementById('avgScore').innerText = `(${avg.toFixed(1)})`;
+
+        // 3.3. Lấy stars
+        const stars = document.querySelectorAll('#ratingWrapper .rate-star');
+
+        // 3.4. Nếu là author (data.ownedByCurrentUser) thì disable
+        if (data.ownedByCurrentUser) {
+          stars.forEach(s => s.classList.add('opacity-50', 'pointer-events-none'));
+        } else {
+          // 3.5. Gán sự kiện hover, click
+          stars.forEach(star => {
+            const score = +star.dataset.score;
+            star.addEventListener('mouseover', () => {
+              stars.forEach(s => {
+                const v = +s.dataset.score;
+                s.classList.toggle('fas', v <= score);
+                s.classList.toggle('far', v > score);
+              });
+            });
+            star.addEventListener('mouseout', () => {
+              stars.forEach(s => {
+                const v = +s.dataset.score;
+                s.classList.toggle('fas', v <= avg);
+                s.classList.toggle('far', v > avg);
+              });
+            });
+            star.addEventListener('click', async () => {
+              try{
+                // gửi rating
+                const resR = await fetch(`/api/sets/${setId}/rating?score=${score}`, {
+                  method: 'POST', headers
+                });
+                if (!resR.ok) return alert('Đánh giá thất bại');
+                // cập nhật avg mới
+                const newAvg = await fetch(`/api/sets/${setId}/rating/average`, { headers })
+                  .then(r => r.json());
+                document.getElementById('avgScore').innerText = `(${newAvg.toFixed(1)})`;
+                stars.forEach(s => {
+                  const v = +s.dataset.score;
+                  s.classList.toggle('fas', v <= newAvg);
+                  s.classList.toggle('far', v > newAvg);
+                });
+              }catch(err) {
+                console.error('Đánh giá thất bại', err);
+                alert('Đánh giá thất bại');
+              }             
+            });
+          });
+          // 3.6. Khởi tạo hiển thị sao theo avg ban đầu
+          stars.forEach(s => {
+            const v = +s.dataset.score;
+            s.classList.toggle('fas', v <= avg);
+            s.classList.toggle('far', v > avg);
+          });
+        }
+        // —————— Kết thúc RATING ——————
+
+
+
         // bắt đầu thiết lập nút Bookmark
         const bookmarkBtn = document.getElementById('bookmarkBtn');
         const icon = bookmarkBtn.querySelector('i');
@@ -376,6 +452,7 @@
           if (data.collected) {
             bookmarkBtn.classList.add('active');
             icon.classList.replace('far', 'fas');
+            quizBtn.classList.remove('d-none');
           }
           // 3. Gán sự kiện toggle
           bookmarkBtn.addEventListener('click', async () => {
@@ -404,7 +481,7 @@
           });
         }
         // kết thúc thiết lập nút Bookmark
-        
+
         //quiz
         if (quizBtn) {
           quizBtn.addEventListener('click', () => {
@@ -412,7 +489,7 @@
             window.location.href = `./quiz.html?setId=${setId}`;
           });
         }
-        
+
         // 4. Hiển thị tiêu đề bộ
         document.querySelector('.top-bar h2').innerText = data.title;  // :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
 
