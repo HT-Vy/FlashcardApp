@@ -135,6 +135,9 @@
           <a class="nav-link position-relative ms-0 ps-2 py-2 " href="../pages/profile.html">
             <span class="nav-link-text ms-1">Hồ Sơ</span>
           </a>
+          <a class="nav-link position-relative ms-0 ps-2 py-2 " href="#" id="logoutLink">
+            <span class="nav-link-text ms-1">Đăng Xuất</span>
+          </a>
         </li>
       </ul>
     </div>
@@ -181,11 +184,7 @@
               <a href="./profile.html" class="nav-link text-body p-0">
                 <img id="navbarAvatar" src="../assets/img/avatar.png" class="avatar avatar-sm" alt="avatar" />
               </a>
-              <!-- Nút logout ẩn sẵn -->
-              <button id="logoutBtn" class="btn btn-sm btn-light position-absolute"
-                style="top: 110%; right: 0; display: none;">
-                Đăng xuất
-              </button>
+              
             </li>
           </ul>
         </div>
@@ -201,10 +200,11 @@
                 <!-- 1) Chọn chế độ -->
                 <div id="modeScreen">
                   <div class="btn-group">
-                    <input type="radio" id="modePractice" name="mode" value="review" checked>
-                    <label class="review" for="modePractice">Ôn tập</label>
-                    <input type="radio" id="modeTest" name="mode" value="test">
-                    <label class="test" for="modeTest">Kiểm tra</label>
+                    <input type="radio" id="modeTest" name="mode" value="test" checked>
+                    <label class="test text-center" for="modeTest">Kiểm tra</label>
+                    <input type="radio" id="modePractice" name="mode" value="review">
+                    <label class="review text-center" for="modePractice">Thẻ Đã Học</label>
+                    
                   </div>
                   <button id="startBtn" type="button">Bắt đầu</button>
                 </div>

@@ -52,21 +52,23 @@ body {
 }
 
 #modeScreen label {
+  width: 138px;
   font-size: 0.95rem;
   padding: 12px 24px;
   border-radius: 10px;
+  border: solid 2px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
+  color: #1a1a1a;
 }
 
 #modeScreen label.review{
-  background: #28a745;
-  color: #fff;
+  border-color: #28a745;
+  
 }
 
 #modeScreen label.test{
-  background: #fa7242;
-  color: #fff;
+  border-color: #fa7242;
 }
 
 #modeScreen input:checked+label {

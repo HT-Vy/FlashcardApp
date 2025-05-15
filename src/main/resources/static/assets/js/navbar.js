@@ -21,16 +21,24 @@
     }
   })();
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('logoutBtn');
-    if (!btn) return;
-  
-    btn.addEventListener('click', () => {
-      // Xóa token khỏi sessionStorage
-      sessionStorage.removeItem('token');
-      // Quay về trang đăng nhập
-      window.location.href = 'sign-in.html';
+  // Hàm xoá token và chuyển về trang đăng nhập
+function logout() {
+  // 1. Xoá token
+  sessionStorage.removeItem('token');
+  // 2. Chuyển về sign-in.html
+  window.location.href = 'sign-in.html';
+}
+
+// Gắn event cho thẻ <a>
+document.addEventListener('DOMContentLoaded', function() {
+  const logoutLink = document.getElementById('logoutLink');
+  if (logoutLink) {
+    logoutLink.addEventListener('click', function(e) {
+      e.preventDefault();  // không để <a> nhảy đường dẫn mặc định
+      //logout ở client:
+      logout();
     });
-  });
+  }
+});
   
   
