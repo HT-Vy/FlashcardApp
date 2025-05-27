@@ -18,10 +18,15 @@ public class User {
     private Long id;
 
     private String fullName;
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String password;
-    private boolean enabled = true;
     private String avatarUrl = "/assets/img/avatar.png";
+     @Enumerated(EnumType.STRING)
+    // @Column(nullable = false)
+    private Role role = Role.USER;   // mặc định USER
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference

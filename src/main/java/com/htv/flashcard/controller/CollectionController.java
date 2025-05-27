@@ -55,7 +55,8 @@ public class CollectionController {
                 fs.getUser().getFullName(),         // tên tác giả
                 fs.getUser().getAvatarUrl(),
                 fs.getFlashcards().size(),
-                0.0
+                0.0,
+                0
             ))
             .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);

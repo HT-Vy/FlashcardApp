@@ -21,5 +21,6 @@ public class FlashcardSetDTO {
 
     private int flashcardCount;
     private double progressPercent;
+    private double averageRating;
 }
 

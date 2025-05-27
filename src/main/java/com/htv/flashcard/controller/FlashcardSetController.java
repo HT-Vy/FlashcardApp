@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +28,7 @@ import com.htv.flashcard.DTO.FlashcardSetDetailDTO;
 import com.htv.flashcard.model.FlashcardSet;
 import com.htv.flashcard.model.User;
 import com.htv.flashcard.repository.FlashcardSetRepository;
+import com.htv.flashcard.security.CustomUserDetailsService;
 import com.htv.flashcard.service.CollectionService;
 import com.htv.flashcard.service.FlashcardSetService;
 import com.htv.flashcard.service.UserService;
@@ -58,34 +60,56 @@ public class FlashcardSetController {
         return ResponseEntity.ok(flashcardSetService.createSet(s, u));
     }
 
-
     /**
-     * Tìm kiếm bộ flashcard theo từ khóa
+     * GET /api/sets/search?keyword=…
+     * Tìm kiếm bộ flashcard theo từ khóa,
+     * chỉ visible=true hoặc do user tạo,
+     * sắp xếp avg rating DESC.
      */
     @GetMapping("/search")
-    public ResponseEntity<?> searchSets(@RequestParam String keyword) {
-        return ResponseEntity.ok(flashcardSetService.searchSets(keyword));
-    }
-    // @GetMapping("/api/sets/search")
-    // public ResponseEntity<List<FlashcardSetDTO>> searchSets(@RequestParam String keyword) {
-    //     List<FlashcardSet> sets = flashcardSetService.searchSets(keyword);
-    //     List<FlashcardSetDTO> dtos = sets.stream().map(s -> {
-    //         FlashcardSetDTO dto = new FlashcardSetDTO();
-    //         dto.setId(s.getId());
-    //         dto.setTitle(s.getTitle());
-    //         dto.setDescription(s.getDescription());
-    //         dto.setLastStudiedAt(
-    //             s.getLastStudiedAt()!=null ? s.getLastStudiedAt() : s.getCreatedAt());
-    //         dto.setSavedByCount(s.getSavedByUsers().size());
-    //         dto.setOwnerId(s.getUser().getId());
-    //         dto.setOwnerName(s.getUser().getFullName());
-    //         dto.setOwnerAvatarUrl(s.getUser().getAvatarUrl());
-    //         dto.setFlashcardCount(s.getFlashcards().size());
-    //         return dto;
-    // }).collect(Collectors.toList());
-    // return ResponseEntity.ok(dtos);
-    // }
+    public ResponseEntity<List<FlashcardSetDTO>> searchSets(
+            @AuthenticationPrincipal UserDetails ud,
+            @RequestParam("keyword") String keyword
+    ) {
+        // 1. Lấy user hiện tại từ token
+        User user = userService.findByEmail(ud.getUsername())
+                      .orElseThrow(() -> new UsernameNotFoundException("User không tồn tại"));
+        Long userId = user.getId();
 
+        // 2. Gọi service để lấy kết quả đã sắp xếp
+        List<FlashcardSet> sets = flashcardSetService.searchSets(userId, keyword);
+
+        // 3. Map entity → DTO
+        // 2) Map sang DTO với đủ 4 trường cần hiển thị
+       List<FlashcardSetDTO> dtos = sets.stream().map(fs -> {
+           FlashcardSetDTO d = new FlashcardSetDTO();
+           d.setId(fs.getId());
+           d.setTitle(fs.getTitle());
+
+           // Tên tác giả
+           d.setOwnerId(fs.getUser().getId());
+           d.setOwnerName(fs.getUser().getFullName()); // hoặc getName() tuỳ bạn
+
+           // Số thẻ trong bộ
+           d.setFlashcardCount(
+               fs.getFlashcards() != null ? fs.getFlashcards().size() : 0
+           );
+
+           // Điểm đánh giá trung bình
+           double avg = fs.getRatings() != null
+               ? fs.getRatings().stream()
+                    .mapToInt(r -> r.getScore())
+                    .average()
+                    .orElse(0.0)
+               : 0.0;
+           d.setAverageRating(avg);
+
+           return d;
+       }).collect(Collectors.toList());
+
+        // 4. Trả về
+        return ResponseEntity.ok(dtos);
+    }
 
     /**
      * Cập nhật bộ flashcard

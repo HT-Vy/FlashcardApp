@@ -48,6 +48,13 @@ public class DashboardService {
                                  .filter(f -> f.getStatus() == Status.LEARNED)
                                  .count();
                 double percent = total > 0 ? (learned * 100.0 / total) : 0.0;
+                // 2. Tính điểm đánh giá trung bình
+                double avgRating = fs.getRatings() != null
+                    ? fs.getRatings().stream()
+                        .mapToInt(r -> r.getScore())
+                        .average()
+                        .orElse(0.0)
+                    : 0.0;
                 return new FlashcardSetDTO(
                     fs.getId(),
                     fs.getTitle(),
@@ -58,7 +65,8 @@ public class DashboardService {
                     fs.getUser().getFullName(),
                     fs.getUser().getAvatarUrl(),
                     total,
-                    percent
+                    percent,
+                    avgRating 
                 );
             })
             .collect(Collectors.toList());
@@ -74,6 +82,13 @@ public class DashboardService {
                                  .filter(f -> f.getStatus() == Status.LEARNED)
                                  .count();
                 double percent = total > 0 ? (learned * 100.0 / total) : 0.0;
+                // 2. Tính điểm đánh giá trung bình
+                double avgRating = fs.getRatings() != null
+                    ? fs.getRatings().stream()
+                        .mapToInt(r -> r.getScore())
+                        .average()
+                        .orElse(0.0)
+                    : 0.0;
                 return new FlashcardSetDTO(
                     fs.getId(),
                     fs.getTitle(),
@@ -84,7 +99,8 @@ public class DashboardService {
                     fs.getUser().getFullName(),
                     fs.getUser().getAvatarUrl(),
                     total,
-                    percent
+                    percent,
+                    avgRating 
                 );
             })
             .collect(Collectors.toList());

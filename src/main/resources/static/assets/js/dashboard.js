@@ -28,8 +28,8 @@
           <div class="card border shadow-xs mb-4">
             <a href="./learn.html?setId=${s.id}" style="text-decoration:none;">
               <div class="card-body text-start p-3 w-100">
-                <div
-                  class="icon icon-shape icon-sm bg-dark text-white text-center border-radius-sm d-flex align-items-center justify-content-center mb-3">
+              <div class="d-flex align-items-center">
+                <div class="icon icon-shape icon-sm bg-dark text-white text-center border-radius-sm d-flex align-items-center justify-content-center mb-3">
                   <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                     fill="currentColor">
                     <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z"></path>
@@ -38,15 +38,23 @@
                       clip-rule="evenodd"></path>
                   </svg>
                 </div>
+                <p class="text-sm text-secondary mb-3 ms-auto">
+                        ${s.averageRating.toFixed(1)} 
+                        <i class="fas fa-star text-warning me-1" style="font-size: 1rem"></i>
+                </p>
+                </div>
                 <div class="row">
                   <div class="col-12">
                     <div class="w-100">
-                      <p class="text-sm text-secondary mb-1">${s.flashcardCount} thẻ</p>
+                      <p class="text-sm text-secondary mb-3">${s.flashcardCount} thẻ</p>
                       <h4 class="mb-2 font-weight-bold text-truncate custom-title">${s.title}</h4>
                       <div class="d-flex align-items-center">
                         <span class="text-sm text-success font-weight-bolder">
-                          <i class="fa fa-chevron-up text-xs me-1"></i> ${s.progressPercent.toFixed(1)}%
+                        <i class="fa fa-chevron-up text-xs me-1"></i> ${s.progressPercent.toFixed(1)}%
                         </span>
+                        <p class="text-sm text-secondary mb-3 ms-auto">
+                          ${s.ownerName}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -125,8 +133,8 @@
           <div class="card border shadow-xs mb-4">
             <a href="./learn.html?setId=${s.id}" style="text-decoration:none;">
               <div class="card-body text-start p-3 w-100">
-                <div
-                  class="icon icon-shape icon-sm bg-dark text-white text-center border-radius-sm d-flex align-items-center justify-content-center mb-3">
+              <div class="d-flex align-items-center">
+                <div class="icon icon-shape icon-sm bg-dark text-white text-center border-radius-sm d-flex align-items-center justify-content-center mb-3">
                   <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                     fill="currentColor">
                     <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z"></path>
@@ -135,12 +143,21 @@
                       clip-rule="evenodd"></path>
                   </svg>
                 </div>
+                <p class="text-sm text-secondary mb-3 ms-auto">
+                        ${s.averageRating.toFixed(1)} 
+                        <i class="fas fa-star text-warning me-1" style="font-size: 1rem"></i>
+                </p>
+                </div>
                 <div class="row">
                   <div class="col-12">
                     <div class="w-100">
-                      <p class="text-sm text-secondary mb-1"></p>
+                      <p class="text-sm text-secondary mb-3">${s.flashcardCount} thẻ</p>
                       <h4 class="mb-2 font-weight-bold text-truncate custom-title">${s.title}</h4>
-                      
+                      <div class="d-flex align-items-center">
+                        <p class="text-sm text-secondary mb-3 ms-auto">
+                          ${s.ownerName}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

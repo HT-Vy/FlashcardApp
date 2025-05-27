@@ -11,7 +11,6 @@ import com.htv.flashcard.DTO.FlashcardSetDTO;
 import com.htv.flashcard.model.Flashcard;
 import com.htv.flashcard.model.FlashcardSet;
 import com.htv.flashcard.model.User;
-import com.htv.flashcard.repository.FlashcardRepository;
 import com.htv.flashcard.repository.FlashcardSetRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -21,18 +20,33 @@ import jakarta.transaction.Transactional;
 public class FlashcardSetService {
     @Autowired
     private FlashcardSetRepository flashcardSetRepo;
-    @Autowired 
-    private FlashcardRepository flashcardRepo;
 
     public FlashcardSet createSet(FlashcardSet set, User user) {
         set.setUser(user);
         return flashcardSetRepo.save(set);
     }
 
-    public List<FlashcardSet> searchSets(String keyword) {
-        return flashcardSetRepo.findByTitleContainingOrDescriptionContaining(keyword, keyword);
+   /**
+     * USER search: visible/owner + search keyword, sắp DESC
+     */
+    public List<FlashcardSet> searchSets(Long userId, String keyword) {
+        return flashcardSetRepo.searchVisibleOrOwnedByOrderByAvgRatingDesc(userId, keyword.toLowerCase());
     }
     
+    /**
+     * ADMIN list: tất cả set, sắp ASC theo avg rating
+     */
+    public List<FlashcardSet> listAllByRatingAsc() {
+        return flashcardSetRepo.findAllOrderByAvgRatingAsc();
+    }
+
+    /** Admin: ẩn/hiện set */
+    public void updateVisibility(Long id, boolean visible) {
+        FlashcardSet set = flashcardSetRepo.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy set " + id));
+        set.setVisible(visible);
+        flashcardSetRepo.save(set);
+    }
 
     public FlashcardSet getSetById(Long id) {
         return flashcardSetRepo.findById(id).orElseThrow();

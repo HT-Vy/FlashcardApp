@@ -10,7 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,7 +80,10 @@ public class AuthController {
             new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
         String token = jwtUtil.generateToken(request.getEmail());
-        return ResponseEntity.ok(new AuthResponse(token));
+        User u = userService.findByEmail(request.getEmail())
+                        .orElseThrow(() -> new UsernameNotFoundException("User không tồn tại"));
+        String role = u.getRole().name();  // "ADMIN" hoặc "USER"
+        return ResponseEntity.ok(new AuthResponse(token, role));
     }
 
     /**
@@ -140,6 +143,13 @@ public class AuthController {
                                 .filter(f -> f.getStatus() == Status.LEARNED)
                                 .count();
                 double percent = total > 0 ? (learned * 100.0 / total) : 0.0;
+                // 2. Tính điểm đánh giá trung bình
+                double avgRating = fs.getRatings() != null
+                    ? fs.getRatings().stream()
+                        .mapToInt(r -> r.getScore())
+                        .average()
+                        .orElse(0.0)
+                    : 0.0;
                 return new FlashcardSetDTO(
                 fs.getId(),
                 fs.getTitle(),
@@ -150,7 +160,8 @@ public class AuthController {
                 fs.getUser().getFullName(),
                 fs.getUser().getAvatarUrl(),
                 total,
-                percent
+                percent,
+                avgRating 
             );
         })
         .collect(Collectors.toList());
@@ -162,4 +173,4 @@ public class AuthController {
         profile.setAvatarUrl(u.getAvatarUrl());
         return ResponseEntity.ok(profile);
     }
-}
+} 

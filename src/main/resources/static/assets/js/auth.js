@@ -25,7 +25,7 @@ if (registerForm) {
     errDiv.innerText = '';
 
     const fullName = fullNameInput.value.trim();
-    const email    = emailInput.value.trim();
+    const email = emailInput.value.trim();
     const password = passwordInput.value;
 
     // Client-side validation
@@ -88,7 +88,7 @@ if (loginForm) {
     e.preventDefault();
     errDiv.innerText = '';
 
-    const email    = emailInput.value.trim();
+    const email = emailInput.value.trim();
     const password = passwordInput.value;
 
     // Client-side validation
@@ -116,11 +116,17 @@ if (loginForm) {
         const errorBody = await res.json();
         throw new Error(errorBody.message || 'Đăng nhập thất bại');
       }
-      const { token } = await res.json();
+
+      const { token, role } = await res.json();
       // Lưu token
       sessionStorage.setItem('token', token);
       // Redirect
-      window.location.href = 'dashboard.html';
+      // Redirect theo role
+      if (role === 'ADMIN') {
+        window.location.href = 'admindashboard.html';      // admin
+      } else {
+        window.location.href = 'dashboard.html';  // trang user bình thường
+      }
     } catch (err) {
       errDiv.innerText = err.message;
     } finally {
