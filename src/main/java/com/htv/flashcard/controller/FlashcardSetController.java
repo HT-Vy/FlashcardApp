@@ -197,7 +197,6 @@ public class FlashcardSetController {
             return fd;
           }).collect(Collectors.toList())
         );
-
         // 4. Kiểm tra bookmark và set vào DTO
         boolean isCollected = collectionService.isCollected(user.getId(), id);
         dto.setCollected(isCollected);   

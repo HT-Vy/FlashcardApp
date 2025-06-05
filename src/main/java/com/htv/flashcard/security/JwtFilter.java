@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,7 +35,15 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        String path = request.getServletPath();
+    // System.out.println(">>> JwtFilter - xử lý path: " + path);
 
+    // *** Chỉ skip login & register, KHÔNG skip /api/auth/me ***
+        if ("/api/auth/login".equals(path) || "/api/auth/register".equals(path)) {
+            // System.out.println(">>> JwtFilter - Skip JWT check cho: " + path);
+            filterChain.doFilter(request, response);
+            return;
+        }
         String authorizationHeader = request.getHeader("Authorization");
         String token = null;
         String email = null;

@@ -36,10 +36,20 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(sets => {
       if (!sets) return; // nếu đã redirect
-      tbody.innerHTML = sets.map(fs => `
+      tbody.innerHTML = sets.map(fs => {
+        // JSON trả về từ backend có trường "averageRating"
+        const avgValue = fs.averageRating;
+        // nếu averageRating không tồn tại (null / undefined), hiển thị 0.0
+        const avgText = (avgValue !== undefined && avgValue !== null)
+          ? avgValue.toFixed(1)
+          : '0.0';
+
+        return `
         <tr data-id="${fs.id}">
           <td class="ps-4">
-            <span class="text-dark font-weight-bold">${fs.title}</span>
+            <a href="./admindetailset.html?setId=${fs.id}" style="text-decoration:none;">
+              <span class="text-dark font-weight-bold">${fs.title}</span>
+            </a>
           </td>
           <td class="text-center">
             ${fs.savedCount}
@@ -52,9 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
           </td>
           <td class="text-center">
             <p class="text-sm text-secondary mb-3 ms-auto">
-                        ${fs.avg.toFixed(1)} 
-                        <i class="fas fa-star text-warning me-1" style="font-size: 1rem"></i>
-                </p>
+              ${avgText}
+              <i class="fas fa-star text-warning me-1" style="font-size: 1rem"></i>
+            </p>
           </td>
           <td class="text-center">
             <button
@@ -64,7 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </button>
           </td>
         </tr>
-      `).join('');
+        `;
+      }).join('');
     })
     .catch(err => {
       console.error('Lỗi khi load admin sets:', err);

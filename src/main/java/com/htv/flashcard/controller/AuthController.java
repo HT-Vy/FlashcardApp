@@ -1,6 +1,7 @@
 package com.htv.flashcard.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -51,11 +53,6 @@ public class AuthController {
      */
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserDTO userDTO) {
-        // 1) Nếu có lỗi validation, trả lỗi đầu tiên
-        // if (bindingResult.hasErrors()) {
-        //     String errMsg = bindingResult.getFieldError().getDefaultMessage();
-        //     return ResponseEntity.badRequest().body(errMsg);
-        // }
 
         // 2) Kiểm tra email đã tồn tại
         if (userService.findByEmail(userDTO.getEmail()).isPresent()) {
@@ -76,9 +73,16 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        try {
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+        } catch (UsernameNotFoundException | org.springframework.security.authentication.BadCredentialsException ex) {
+            return ResponseEntity
+                   .status(HttpStatus.UNAUTHORIZED)
+                   .body(Map.of("message", "Email hoặc mật khẩu không đúng"));
+        }
+            
         String token = jwtUtil.generateToken(request.getEmail());
         User u = userService.findByEmail(request.getEmail())
                         .orElseThrow(() -> new UsernameNotFoundException("User không tồn tại"));
@@ -137,34 +141,34 @@ public class AuthController {
         User u = userService.findByEmail(userDetails.getUsername()).orElseThrow();
         // Mới: map id, title, description và flashcardCount
         List<FlashcardSetDTO> sets = u.getFlashcardSets().stream()
-        .map(fs -> {
-                int total = fs.getFlashcards().size();
-                long learned = fs.getFlashcards().stream()
-                                .filter(f -> f.getStatus() == Status.LEARNED)
-                                .count();
-                double percent = total > 0 ? (learned * 100.0 / total) : 0.0;
-                // 2. Tính điểm đánh giá trung bình
-                double avgRating = fs.getRatings() != null
-                    ? fs.getRatings().stream()
-                        .mapToInt(r -> r.getScore())
-                        .average()
-                        .orElse(0.0)
-                    : 0.0;
-                return new FlashcardSetDTO(
-                fs.getId(),
-                fs.getTitle(),
-                fs.getDescription(),
-                fs.getLastStudiedAt() != null ? fs.getLastStudiedAt() : fs.getCreatedAt(),
-                fs.getSavedByUsers().size(),
-                fs.getUser().getId(),
-                fs.getUser().getFullName(),
-                fs.getUser().getAvatarUrl(),
-                total,
-                percent,
-                avgRating 
-            );
-        })
-        .collect(Collectors.toList());
+            .map(fs -> {
+                    int total = fs.getFlashcards().size();
+                    long learned = fs.getFlashcards().stream()
+                                    .filter(f -> f.getStatus() == Status.LEARNED)
+                                    .count();
+                    double percent = total > 0 ? (learned * 100.0 / total) : 0.0;
+                    // 2. Tính điểm đánh giá trung bình
+                    double avgRating = fs.getRatings() != null
+                        ? fs.getRatings().stream()
+                            .mapToInt(r -> r.getScore())
+                            .average()
+                            .orElse(0.0)
+                        : 0.0;
+                    return new FlashcardSetDTO(
+                    fs.getId(),
+                    fs.getTitle(),
+                    fs.getDescription(),
+                    fs.getLastStudiedAt() != null ? fs.getLastStudiedAt() : fs.getCreatedAt(),
+                    fs.getSavedByUsers().size(),
+                    fs.getUser().getId(),
+                    fs.getUser().getFullName(),
+                    fs.getUser().getAvatarUrl(),
+                    total,
+                    percent,
+                    avgRating 
+                );
+            })
+            .collect(Collectors.toList());
         UserProfileDTO profile = new UserProfileDTO();
         profile.setId(u.getId());  
         profile.setFullName(u.getFullName());
